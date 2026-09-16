@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomer } from '../context/CustomerContext';
-import { api } from '../services/api';
+import { api, getImageUrl } from '../services/api';
 import { X, MessageSquare, Phone, User, Send, CheckCircle2, MessageCircle, AlertCircle } from 'lucide-react';
 
 export const EnquiryModal = ({ isOpen, onClose, product, onEnquirySuccess }) => {
@@ -130,7 +130,7 @@ export const EnquiryModal = ({ isOpen, onClose, product, onEnquirySuccess }) => 
               <div className="flex items-center gap-3 p-3 bg-[#FAF9F5] rounded-lg border border-[#E8E2D5]">
                 {product.images?.[0] && (
                   <img
-                    src={product.images[0].startsWith('/uploads') ? `http://localhost:5000${product.images[0]}` : product.images[0]}
+                    src={getImageUrl(product.images[0])}
                     alt={product.name}
                     className="w-12 h-12 object-cover rounded-md border border-[#E8E2D5] shrink-0"
                   />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/api';
+import { api, getImageUrl } from '../../services/api';
 import {
   MessageSquare,
   Search,
@@ -139,11 +139,7 @@ export const AdminEnquiries = () => {
                 </tr>
               ) : (
                 enquiries.map((enq) => {
-                  const img = enq.product_image || enq.product_id?.images?.[0]
-                    ? (enq.product_image || enq.product_id?.images?.[0]).startsWith('/uploads')
-                      ? `http://localhost:5000${enq.product_image || enq.product_id?.images?.[0]}`
-                      : enq.product_image || enq.product_id?.images?.[0]
-                    : 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+                  const img = getImageUrl(enq.product_image || enq.product_id?.images?.[0]);
 
                   const cleanCustMobile = enq.customer_mobile?.replace(/[^0-9]/g, '');
                   const waUrl = `https://wa.me/${cleanCustMobile}?text=${encodeURIComponent(

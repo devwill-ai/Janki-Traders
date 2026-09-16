@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/api';
+import { api, getImageUrl } from '../../services/api';
 import { Layers, Plus, Edit2, Trash2, RefreshCw, X, Image as ImageIcon } from 'lucide-react';
 
 export const AdminCategories = () => {
@@ -153,11 +153,7 @@ export const AdminCategories = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat) => {
-            const img = cat.image
-              ? cat.image.startsWith('/uploads')
-                ? `http://localhost:5000${cat.image}`
-                : cat.image
-              : 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+            const img = getImageUrl(cat.image);
 
             return (
               <div

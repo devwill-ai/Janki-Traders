@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../services/api';
+import { api, getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import {
   MessageSquare,
@@ -184,11 +184,7 @@ export const InquiredProductsPage = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {enquiries.map((item) => {
-                const img = item.product_image
-                  ? item.product_image.startsWith('/uploads')
-                    ? `http://localhost:5000${item.product_image}`
-                    : item.product_image
-                  : 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+                const img = getImageUrl(item.product_image);
 
                 const waText = encodeURIComponent(
                   `Hello Janki Traders, I am following up on my enquiry for "${item.product_name}" (Code: ${item.product_code || 'N/A'}).`

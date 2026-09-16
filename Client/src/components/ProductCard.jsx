@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Lock, Unlock, MessageCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 
 export const ProductCard = ({ product, onInquireClick }) => {
@@ -9,13 +10,7 @@ export const ProductCard = ({ product, onInquireClick }) => {
   const isRestricted = product.visibility === 'restricted';
   const isLocked = isRestricted && !hasRestrictedAccess;
 
-  const imageUrl = product.images?.[0]
-    ? product.images[0].startsWith('http') || product.images[0].startsWith('/uploads')
-      ? product.images[0].startsWith('/uploads')
-        ? `http://localhost:5000${product.images[0]}`
-        : product.images[0]
-      : product.images[0]
-    : 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+  const imageUrl = getImageUrl(product.images?.[0]);
 
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');

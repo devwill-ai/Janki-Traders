@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
+import { api, getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import { EnquiryModal } from '../components/EnquiryModal';
 import {
@@ -115,9 +115,7 @@ export const ProductDetailPage = () => {
   }
 
   const images = product.images && product.images.length > 0
-    ? product.images.map((img) =>
-        img.startsWith('/uploads') ? `http://localhost:5000${img}` : img
-      )
+    ? product.images.map((img) => getImageUrl(img))
     : ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80'];
 
   return (

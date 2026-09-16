@@ -1,5 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
-const SERVER_HOST = import.meta.env.VITE_SERVER_URL || 'http://localhost:5001';
+const API_BASE = import.meta.env.VITE_API_URL;
+const SERVER_HOST = API_BASE.replace(/\/api$/, '');
 
 export const getImageUrl = (imagePath) => {
   if (!imagePath) return 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';

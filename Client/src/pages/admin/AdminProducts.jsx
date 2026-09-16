@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/api';
+import { api, getImageUrl } from '../../services/api';
 import {
   ShoppingBag,
   Plus,
@@ -278,11 +278,7 @@ export const AdminProducts = () => {
                 </tr>
               ) : (
                 products.map((prod) => {
-                  const img = prod.images?.[0]
-                    ? prod.images[0].startsWith('/uploads')
-                      ? `http://localhost:5000${prod.images[0]}`
-                      : prod.images[0]
-                    : 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+                  const img = getImageUrl(prod.images?.[0]);
 
                   return (
                     <tr key={prod._id} className="hover:bg-[#FAF9F5]/60 transition-colors">
