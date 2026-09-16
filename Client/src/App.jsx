@@ -8,6 +8,7 @@ import { Navbar } from './components/Navbar';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { Footer } from './components/Footer';
 import { AccessRequestModal } from './components/AccessRequestModal';
+import { ScrollToTop } from './components/ScrollToTop';
 
 // Storefront Pages
 import { HomePage } from './pages/HomePage';
@@ -47,6 +48,7 @@ function App() {
     <AdminProvider>
       <CustomerProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {/* Storefront Routes */}
             <Route element={<StorefrontLayout />}>

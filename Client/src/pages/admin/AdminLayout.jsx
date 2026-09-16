@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
 import {
@@ -18,12 +18,19 @@ export const AdminLayout = () => {
   const { isAuthenticated, adminUser, logout } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
+  const mainContentRef = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/admin/login');
     }
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   if (!isAuthenticated) {
     return null;
@@ -122,7 +129,7 @@ export const AdminLayout = () => {
       </aside>
 
       {/* Main Admin Content */}
-      <main className="flex-1 overflow-y-auto min-h-screen">
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto min-h-screen">
         <Outlet />
       </main>
     </div>
