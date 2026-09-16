@@ -22,6 +22,7 @@ export const AdminLayout = () => {
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef(null);
+  const mainContentRef = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -29,9 +30,12 @@ export const AdminLayout = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Close "More" menu on route change
+  // Close "More" menu + scroll to top on route change
   useEffect(() => {
     setMoreOpen(false);
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo(0, 0);
+    }
   }, [location.pathname]);
 
   // Close "More" menu on outside click
@@ -149,7 +153,7 @@ export const AdminLayout = () => {
       </aside>
 
       {/* Main Admin Content */}
-      <main className="flex-1 overflow-y-auto min-h-screen pb-20 md:pb-0">
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto min-h-screen pb-20 md:pb-0">
         <Outlet />
       </main>
 
