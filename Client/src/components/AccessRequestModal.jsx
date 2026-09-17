@@ -83,10 +83,10 @@ export const AccessRequestModal = () => {
             </div>
             <div>
               <h3 className="font-serif text-xl font-semibold leading-tight text-white">
-                Request Catalogue Access
+                Unlock Catalogue Access
               </h3>
               <p className="text-[11px] text-[#C5A880] tracking-wider uppercase font-sans">
-                7-Day Unrestricted Access
+                Instant Unlock for Registered Users • 7-Day Access
               </p>
             </div>
           </div>
@@ -195,7 +195,7 @@ export const AccessRequestModal = () => {
             /* Input Form (Name + Mobile per Section 8.2) */
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="text-xs text-[#6B6862] leading-relaxed">
-                Janki Traders grants trade partners, architects, and verified builders full access to our complete product catalogue for <span className="font-semibold text-[#1A1A1A]">7 days</span>.
+                Enter your mobile number to <span className="font-semibold text-[#1A1A1A]">instantly unlock full access</span> if you have an active approval, or submit details to request 7-day trade access.
               </div>
 
               {feedback && (
@@ -246,7 +246,7 @@ export const AccessRequestModal = () => {
                   />
                 </div>
                 <p className="text-[11px] text-stone-500">
-                  No OTP required. Admin reviews and grants access immediately.
+                  Approved members regain access instantly without re-approval.
                 </p>
               </div>
 
@@ -259,11 +259,11 @@ export const AccessRequestModal = () => {
                   {isSubmitting ? (
                     <>
                       <RefreshCw size={14} className="animate-spin" />
-                      <span>Submitting Request...</span>
+                      <span>Verifying Access...</span>
                     </>
                   ) : (
                     <>
-                      <span>Submit Access Request</span>
+                      <span>Verify & Unlock Access</span>
                       <ArrowRight size={14} />
                     </>
                   )}

@@ -4,9 +4,9 @@ import { api } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import { ProductCard } from '../components/ProductCard';
 import { EnquiryModal } from '../components/EnquiryModal';
-import heroSlide1 from '../assets/file_00000000cb5881fd88dee1cf4cda3125.png';
-import heroSlide2 from '../assets/file_00000000daa081f585bc9df94e9725ca.png';
-import heroSlide3 from '../assets/file_00000000565881f5b29c394eab3627ca.png';
+import heroSlide1 from '../assets/hero-slide-1.webp';
+import heroSlide2 from '../assets/hero-slide-2.webp';
+import heroSlide3 from '../assets/hero-slide-3.webp';
 import {
   ArrowRight,
   ShieldCheck,
@@ -466,7 +466,7 @@ export const HomePage = () => {
                 onClick={openAccessModal}
                 className="px-8 py-3.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase transition-all shadow-lg hover:scale-105 cursor-pointer"
               >
-                Request 7-Day Access
+                Unlock 7-Day Access
               </button>
             )}
 

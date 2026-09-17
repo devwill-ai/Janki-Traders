@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { CustomerProvider } from './context/CustomerContext';
+import { BulkEnquiryProvider } from './context/BulkEnquiryContext';
 import { AdminProvider } from './context/AdminContext';
 
 // Storefront Components
@@ -8,6 +9,8 @@ import { Navbar } from './components/Navbar';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { Footer } from './components/Footer';
 import { AccessRequestModal } from './components/AccessRequestModal';
+import { BulkEnquiryModal } from './components/BulkEnquiryModal';
+import { BulkEnquiryFloatingBar } from './components/BulkEnquiryFloatingBar';
 import { ScrollToTop } from './components/ScrollToTop';
 
 // Storefront Pages
@@ -42,6 +45,8 @@ const StorefrontLayout = () => {
       <Footer />
       <MobileBottomNav />
       <AccessRequestModal />
+      <BulkEnquiryModal />
+      <BulkEnquiryFloatingBar />
     </div>
   );
 };
@@ -50,7 +55,8 @@ function App() {
   return (
     <AdminProvider>
       <CustomerProvider>
-        <BrowserRouter>
+        <BulkEnquiryProvider>
+          <BrowserRouter>
           <ScrollToTop />
           <Routes>
             {/* Storefront Routes */}
@@ -80,7 +86,8 @@ function App() {
             {/* Catch-all redirect to Home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </BrowserRouter>
+          </BrowserRouter>
+        </BulkEnquiryProvider>
       </CustomerProvider>
     </AdminProvider>
   );
