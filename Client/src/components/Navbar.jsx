@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCustomer } from '../context/CustomerContext';
 import {
   Lock,
   Unlock,
   Clock,
-  ShoppingBag,
-  MessageSquareText,
-  Phone,
-  Home,
   ShieldAlert,
   Menu,
   X,
@@ -19,6 +15,22 @@ export const Navbar = () => {
   const location = useLocation();
   const { status, hasRestrictedAccess, daysRemaining, hoursRemaining, openAccessModal, customerName } = useCustomer();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Monitor scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const isHomePage = location.pathname === '/';
+  // Transparent only on home page when user hasn't scrolled
+  const isTransparent = isHomePage && !isScrolled;
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -34,28 +46,13 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#E8E2D5] glass-nav transition-all">
-      {/* Top micro-bar for quick announcements & admin portal link */}
-      <div className="bg-[#1A1A1A] text-[#FAF9F5] text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#C5A880] animate-pulse"></span>
-            <span className="font-light tracking-wider text-stone-300">
-              Architectural & Wholesale Doors • Waterproof WPC • Fluted Glass • Teak
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-stone-400">
-            <Link
-              to="/admin/login"
-              className="hover:text-[#C5A880] transition-colors flex items-center gap-1"
-            >
-              <UserCheck size={12} />
-              <span>Admin Portal</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+        isTransparent
+          ? 'bg-transparent shadow-none'
+          : 'bg-[#FAF9F5]/92 backdrop-blur-md shadow-xs'
+      }`}
+    >
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Identity */}
@@ -66,10 +63,18 @@ export const Navbar = () => {
             className="w-11 h-11 object-contain transition-transform group-hover:scale-105 drop-shadow-xs"
           />
           <div>
-            <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-wide text-[#1A1A1A] block leading-none">
+            <span
+              className={`font-serif text-2xl sm:text-3xl font-semibold tracking-wide block leading-none transition-colors duration-300 ${
+                isTransparent ? 'text-white drop-shadow-sm' : 'text-[#1A1A1A]'
+              }`}
+            >
               Janki Traders
             </span>
-            <span className="text-[10px] tracking-[0.2em] uppercase font-sans text-[#8C6D46] block mt-1 font-medium">
+            <span
+              className={`text-[10px] tracking-[0.2em] uppercase font-sans block mt-1 font-medium transition-colors duration-300 ${
+                isTransparent ? 'text-[#C5A880]' : 'text-[#8C6D46]'
+              }`}
+            >
               Architectural Doors
             </span>
           </div>
@@ -83,23 +88,51 @@ export const Navbar = () => {
               to={link.path}
               className={`text-sm font-medium tracking-wide transition-colors relative py-1 ${
                 isActive(link.path)
-                  ? 'text-[#8C6D46] font-semibold'
-                  : 'text-[#4A4742] hover:text-[#1A1A1A]'
+                  ? isTransparent
+                    ? 'text-[#C5A880] font-semibold'
+                    : 'text-[#8C6D46] font-semibold'
+                  : isTransparent
+                    ? 'text-white/85 hover:text-white'
+                    : 'text-[#4A4742] hover:text-[#1A1A1A]'
               }`}
             >
               {link.name}
               {isActive(link.path) && (
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#8C6D46] rounded-full animate-fadeIn" />
+                <span
+                  className={`absolute bottom-0 left-0 w-full h-[2px] rounded-full animate-fadeIn ${
+                    isTransparent ? 'bg-[#C5A880]' : 'bg-[#8C6D46]'
+                  }`}
+                />
               )}
             </Link>
           ))}
         </nav>
 
-        {/* Customer Access Status Button */}
+        {/* Header Right Actions (Admin Portal + Customer Access Status Button) */}
         <div className="hidden sm:flex items-center gap-3">
+          {/* Admin Login Button */}
+          <Link
+            to="/admin/login"
+            className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+              isTransparent
+                ? 'text-white/80 hover:text-white hover:bg-white/10'
+                : 'text-[#6B6862] hover:text-[#1A1A1A] hover:bg-[#E8E2D5]/40'
+            }`}
+            title="Admin Portal"
+          >
+            <UserCheck size={14} />
+            <span>Admin</span>
+          </Link>
+
           {status === 'active' ? (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EBF5EE] border border-[#A7D7B5] text-[#1E5631] text-xs font-medium shadow-xs">
-              <Unlock size={14} className="text-[#2E7D32]" />
+            <div
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                isTransparent
+                  ? 'bg-emerald-950/60 border border-emerald-400/40 text-emerald-200 backdrop-blur-md shadow-sm'
+                  : 'bg-[#EBF5EE] border border-[#A7D7B5] text-[#1E5631] shadow-xs'
+              }`}
+            >
+              <Unlock size={14} className={isTransparent ? 'text-emerald-400' : 'text-[#2E7D32]'} />
               <span>
                 Full Access Active ({daysRemaining > 0 ? `${daysRemaining}d left` : `${hoursRemaining}h left`})
               </span>
@@ -107,15 +140,23 @@ export const Navbar = () => {
           ) : status === 'pending' ? (
             <button
               onClick={openAccessModal}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF8E7] border border-[#F3DB9F] text-[#8C6D46] text-xs font-medium hover:bg-[#FFF3D6] transition-colors"
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                isTransparent
+                  ? 'bg-amber-950/60 border border-amber-400/40 text-amber-200 backdrop-blur-md hover:bg-amber-950/80'
+                  : 'bg-[#FFF8E7] border border-[#F3DB9F] text-[#8C6D46] hover:bg-[#FFF3D6]'
+              }`}
             >
-              <Clock size={14} className="animate-spin text-[#8C6D46]" />
+              <Clock size={14} className={`animate-spin ${isTransparent ? 'text-amber-400' : 'text-[#8C6D46]'}`} />
               <span>Approval Pending</span>
             </button>
           ) : status === 'expired' ? (
             <button
               onClick={openAccessModal}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFF0F0] border border-[#F5C2C2] text-[#B71C1C] text-xs font-semibold hover:bg-[#FFE5E5] transition-all"
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                isTransparent
+                  ? 'bg-rose-950/60 border border-rose-400/40 text-rose-200 backdrop-blur-md hover:bg-rose-950/80'
+                  : 'bg-[#FFF0F0] border border-[#F5C2C2] text-[#B71C1C] hover:bg-[#FFE5E5]'
+              }`}
             >
               <ShieldAlert size={14} />
               <span>Access Expired • Renew</span>
@@ -123,7 +164,11 @@ export const Navbar = () => {
           ) : (
             <button
               onClick={openAccessModal}
-              className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-[#FAF9F5] text-xs font-medium tracking-wide shadow-sm transition-all hover:shadow-md cursor-pointer"
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-medium tracking-wide transition-all cursor-pointer ${
+                isTransparent
+                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-md shadow-sm'
+                  : 'bg-[#1A1A1A] hover:bg-[#8C6D46] text-[#FAF9F5] shadow-sm hover:shadow-md'
+              }`}
             >
               <Lock size={13} className="text-[#C5A880]" />
               <span>Request Full Access</span>
@@ -135,7 +180,11 @@ export const Navbar = () => {
         <div className="flex items-center gap-2 md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#1A1A1A] hover:bg-[#E8E2D5]/50 rounded-md transition-colors"
+            className={`p-2 rounded-md transition-colors cursor-pointer ${
+              isTransparent
+                ? 'text-white hover:bg-white/15'
+                : 'text-[#1A1A1A] hover:bg-[#E8E2D5]/50'
+            }`}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -145,7 +194,13 @@ export const Navbar = () => {
 
       {/* Mobile dropdown menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#E8E2D5] bg-[#FAF9F5] px-4 pt-3 pb-5 space-y-2 animate-fadeIn">
+        <div
+          className={`md:hidden border-t px-4 pt-3 pb-5 space-y-2 animate-fadeIn ${
+            isTransparent
+              ? 'bg-[#14120E]/95 backdrop-blur-xl border-white/15 text-white shadow-2xl'
+              : 'bg-[#FAF9F5] border-[#E8E2D5] text-[#1A1A1A]'
+          }`}
+        >
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -153,35 +208,57 @@ export const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-3 py-2 rounded-md text-base font-medium ${
                 isActive(link.path)
-                  ? 'bg-[#E8E2D5]/60 text-[#8C6D46] font-semibold'
-                  : 'text-[#4A4742] hover:bg-[#E8E2D5]/30'
+                  ? isTransparent
+                    ? 'bg-white/15 text-[#C5A880] font-semibold'
+                    : 'bg-[#E8E2D5]/60 text-[#8C6D46] font-semibold'
+                  : isTransparent
+                    ? 'text-white/80 hover:bg-white/10'
+                    : 'text-[#4A4742] hover:bg-[#E8E2D5]/30'
               }`}
             >
               {link.name}
             </Link>
           ))}
 
-          <div className="pt-3 border-t border-[#E8E2D5]">
+          {/* Admin Login Link in Mobile Menu */}
+          <Link
+            to="/admin/login"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+              isTransparent
+                ? 'text-white/80 hover:bg-white/10'
+                : 'text-[#4A4742] hover:bg-[#E8E2D5]/30'
+            }`}
+          >
+            <UserCheck size={16} />
+            <span>Admin Portal</span>
+          </Link>
+
+          <div className={`pt-3 border-t ${isTransparent ? 'border-white/15' : 'border-[#E8E2D5]'}`}>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 openAccessModal();
               }}
-              className="w-full py-2.5 px-4 rounded-md bg-[#1A1A1A] text-[#FAF9F5] text-sm font-medium flex items-center justify-center gap-2"
+              className={`w-full py-2.5 px-4 rounded-md text-sm font-medium flex items-center justify-center gap-2 cursor-pointer ${
+                isTransparent
+                  ? 'bg-[#C5A880] text-[#1A1A1A] font-semibold'
+                  : 'bg-[#1A1A1A] text-[#FAF9F5]'
+              }`}
             >
               {status === 'active' ? (
                 <>
-                  <Unlock size={16} className="text-[#8C6D46]" />
+                  <Unlock size={16} className={isTransparent ? 'text-[#1A1A1A]' : 'text-[#8C6D46]'} />
                   <span>Full Catalogue Unlocked ({daysRemaining}d left)</span>
                 </>
               ) : status === 'pending' ? (
                 <>
-                  <Clock size={16} className="text-[#C5A880]" />
+                  <Clock size={16} className={isTransparent ? 'text-[#1A1A1A]' : 'text-[#C5A880]'} />
                   <span>Request Pending Admin Review</span>
                 </>
               ) : (
                 <>
-                  <Lock size={16} className="text-[#C5A880]" />
+                  <Lock size={16} className={isTransparent ? 'text-[#1A1A1A]' : 'text-[#C5A880]'} />
                   <span>Request Full Catalogue Access</span>
                 </>
               )}

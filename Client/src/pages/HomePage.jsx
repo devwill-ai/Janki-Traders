@@ -4,6 +4,9 @@ import { api } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import { ProductCard } from '../components/ProductCard';
 import { EnquiryModal } from '../components/EnquiryModal';
+import heroSlide1 from '../assets/file_00000000cb5881fd88dee1cf4cda3125.png';
+import heroSlide2 from '../assets/file_00000000daa081f585bc9df94e9725ca.png';
+import heroSlide3 from '../assets/file_00000000565881f5b29c394eab3627ca.png';
 import {
   ArrowRight,
   ShieldCheck,
@@ -17,7 +20,17 @@ import {
   Clock,
   Compass,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
+
+const originalHeroSlides = [heroSlide1, heroSlide2, heroSlide3];
+// Cloned first and last slides to achieve infinite continuous sliding loop
+const carouselSlides = [
+  originalHeroSlides[originalHeroSlides.length - 1],
+  ...originalHeroSlides,
+  originalHeroSlides[0],
+];
 
 export const HomePage = () => {
   const { openAccessModal, hasRestrictedAccess, status, daysRemaining, settings } = useCustomer();
@@ -25,6 +38,63 @@ export const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProductForEnquiry, setSelectedProductForEnquiry] = useState(null);
+
+  // Infinite Hero Slider State
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Auto-advance infinite slider every 5 seconds
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      setIsTransitioning(true);
+      setCurrentIndex((prev) => prev + 1);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [isPaused]);
+
+  // Seamless jump between clones and originals without rewinding
+  const handleTransitionEnd = () => {
+    if (currentIndex === carouselSlides.length - 1) {
+      setIsTransitioning(false);
+      setCurrentIndex(1);
+    } else if (currentIndex === 0) {
+      setIsTransitioning(false);
+      setCurrentIndex(originalHeroSlides.length);
+    }
+  };
+
+  // Re-enable transitions after instant jump
+  useEffect(() => {
+    if (!isTransitioning) {
+      const rafId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsTransitioning(true);
+        });
+      });
+      return () => cancelAnimationFrame(rafId);
+    }
+  }, [isTransitioning]);
+
+  const handleNextSlide = () => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handlePrevSlide = () => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  const handleDotClick = (dotIdx) => {
+    setIsTransitioning(true);
+    setCurrentIndex(dotIdx + 1);
+  };
+
+  const activeDot = (currentIndex - 1 + originalHeroSlides.length) % originalHeroSlides.length;
 
   useEffect(() => {
     const loadHomeData = async () => {
@@ -55,99 +125,104 @@ export const HomePage = () => {
   return (
     <div className="min-h-screen bg-[#FAF9F5]">
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 border-b border-[#E8E2D5] bg-gradient-to-b from-[#F5F2EA] to-[#FAF9F5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Headline & CTAs */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FAF9F5] border border-[#C5A880] text-[#8C6D46] text-xs font-semibold tracking-wider uppercase shadow-xs">
-                <ShieldCheck size={14} />
-                <span>Trade & Architectural Doors Division</span>
+      <section
+        className="relative w-full min-h-screen flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-20 pb-16 sm:pt-24 sm:pb-20"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* Infinite Background Image Slider */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden select-none pointer-events-none">
+          <div
+            className="flex h-full w-full"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+              transition: isTransitioning
+                ? 'transform 1000ms cubic-bezier(0.25, 1, 0.5, 1)'
+                : 'none',
+            }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {carouselSlides.map((imgSrc, idx) => (
+              <div key={idx} className="relative h-full w-full min-w-full shrink-0">
+                <img
+                  src={imgSrc}
+                  alt={`Janki Traders Architectural Door Showcase ${idx}`}
+                  className="h-full w-full object-cover object-center"
+                />
               </div>
-
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#1A1A1A] font-semibold leading-[1.12] tracking-tight">
-                Architectural Doors of Timeless Craft & Enduring Strength
-              </h1>
-
-              <p className="text-base sm:text-lg text-[#5A5751] font-light leading-relaxed max-w-2xl">
-                Janki Traders supplies premier residential and commercial door collections — from 100% moisture-proof WPC & FRP formulations to handcrafted solid Burma teak and contemporary acoustic glass doors.
-              </p>
-
-              {/* Status Banner / Quick CTA */}
-              {status === 'active' ? (
-                <div className="p-4 rounded-lg bg-[#EBF5EE] border border-[#A7D7B5] text-[#1E5631] text-xs flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-medium">
-                    <Sparkles size={16} className="text-[#2E7D32]" />
-                    <span>Your full catalogue access is active ({daysRemaining} days remaining).</span>
-                  </div>
-                  <Link
-                    to="/shop"
-                    className="font-semibold underline hover:text-[#143d22]"
-                  >
-                    View All Doors →
-                  </Link>
-                </div>
-              ) : (
-                <div className="p-4 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 text-xs text-[#4A4742]">
-                    <Lock size={15} className="text-[#8C6D46] shrink-0" />
-                    <span>Wholesale trade specs are restricted. Request 7-day catalogue access.</span>
-                  </div>
-                  <button
-                    onClick={openAccessModal}
-                    className="text-xs font-bold text-[#8C6D46] hover:text-[#1A1A1A] underline tracking-wide shrink-0 cursor-pointer"
-                  >
-                    Request 7-Day Access
-                  </button>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/shop"
-                  className="px-6 py-3.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-[#FAF9F5] text-xs font-semibold tracking-wider uppercase transition-all shadow-md flex items-center gap-2"
-                >
-                  <span>Explore Full Catalogue</span>
-                  <ArrowRight size={14} />
-                </Link>
-
-                <a
-                  href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Janki Traders, I would like to enquire about your door collections.')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-xs font-semibold tracking-wider uppercase border border-[#E8E2D5] hover:border-[#8C6D46] transition-all shadow-xs flex items-center gap-2"
-                >
-                  <MessageCircle size={15} className="text-[#25D366]" />
-                  <span>WhatsApp Enquiry</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Right Visual Collage */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-[#F2EFE9]">
-                  <img
-                    src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1000&q=80"
-                    alt="Luxury Entrance Door"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Floating Architectural Card */}
-                <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md p-4 rounded-lg border border-[#E8E2D5] shadow-xl max-w-[240px] space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#8C6D46]">
-                    <Sparkles size={14} />
-                    <span>Hand-Selected Woods</span>
-                  </div>
-                  <p className="text-[11px] text-[#6B6862] leading-relaxed">
-                    Kiln-seasoned teak, seamless waterproof WPC cores, and precision acoustic seals.
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
+
+          {/* Luxury Architectural Contrast Overlays */}
+          <div className="absolute inset-0 bg-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/65" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.65)_100%)] pointer-events-none" />
+        </div>
+
+        {/* Centered Hero Content */}
+        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center flex flex-col items-center justify-center">
+          {/* Headline */}
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-6">
+            Architectural Doors of Timeless Craft & Enduring Strength
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-10">
+            Janki Traders supplies premier residential and commercial door collections — from 100% moisture-proof WPC & FRP formulations to handcrafted solid Burma teak and contemporary acoustic glass doors.
+          </p>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/shop"
+              className="px-7 py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              <span>Explore Full Catalogue</span>
+              <ArrowRight size={14} />
+            </Link>
+
+            <a
+              href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Janki Traders, I would like to enquire about your door collections.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-7 py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              <MessageCircle size={15} className="text-[#25D366]" />
+              <span>WhatsApp Enquiry</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Previous / Next Slide Controls (Desktop) */}
+        <button
+          onClick={handlePrevSlide}
+          aria-label="Previous showcase slide"
+          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/35 hover:bg-black/70 border border-white/25 text-white/80 hover:text-white items-center justify-center transition-all backdrop-blur-md cursor-pointer hover:scale-105"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <button
+          onClick={handleNextSlide}
+          aria-label="Next showcase slide"
+          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/35 hover:bg-black/70 border border-white/25 text-white/80 hover:text-white items-center justify-center transition-all backdrop-blur-md cursor-pointer hover:scale-105"
+        >
+          <ChevronRight size={22} />
+        </button>
+
+        {/* Slide Indicator Pills */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+          {originalHeroSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleDotClick(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`transition-all duration-300 rounded-full h-2 cursor-pointer ${
+                activeDot === idx
+                  ? 'w-8 bg-[#C5A880]'
+                  : 'w-2 bg-white/40 hover:bg-white/80'
+              }`}
+            />
+          ))}
         </div>
       </section>
 

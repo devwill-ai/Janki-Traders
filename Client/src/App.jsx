@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { CustomerProvider } from './context/CustomerContext';
 import { AdminProvider } from './context/AdminContext';
 
@@ -30,10 +30,13 @@ import { AdminSettings } from './pages/admin/AdminSettings';
 
 // Storefront Layout wrapper
 const StorefrontLayout = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-grow">
+      <main className={`flex-grow ${isHomePage ? '' : 'pt-20'}`}>
         <Outlet />
       </main>
       <Footer />
