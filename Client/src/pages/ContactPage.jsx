@@ -91,39 +91,39 @@ export const ContactPage = () => {
             </div>
 
             {/* Direct Calls & WhatsApp CTAs (Section 7) */}
-            <div className="bg-white rounded-xl border border-[#E8E2D5] p-6 shadow-xs space-y-4">
-              <h3 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+            <div className="bg-white rounded-xl border border-[#E8E2D5] p-[clamp(12px,3vw,24px)] shadow-xs space-y-4">
+              <h3 className="font-serif text-[clamp(1.15rem,3vw,1.35rem)] font-semibold text-[#1A1A1A]">
                 Direct Communications
               </h3>
 
               <div className="space-y-3 pt-1">
                 <a
                   href={`tel:${phone}`}
-                  className="w-full py-3 px-4 rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/60 border border-[#E8E2D5] text-[#1A1A1A] text-xs font-semibold flex items-center justify-between transition-colors"
+                  className="w-full py-2.5 sm:py-3 px-[clamp(8px,2.2vw,16px)] rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/60 border border-[#E8E2D5] text-[#1A1A1A] text-[clamp(10px,2.5vw,12px)] font-semibold flex items-center justify-between gap-2 transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Phone size={16} className="text-[#8C6D46]" />
-                    <span>Call Sales Desk: {phone}</span>
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <Phone size={15} className="text-[#8C6D46] shrink-0" />
+                    <span className="truncate">Call Sales Desk: <span className="font-mono">{phone}</span></span>
                   </div>
-                  <span className="text-[11px] text-[#8C6D46]">Direct Call →</span>
+                  <span className="text-[clamp(9px,2.2vw,11px)] text-[#8C6D46] font-medium shrink-0 whitespace-nowrap">Direct Call →</span>
                 </a>
 
                 <a
                   href={whatsappDirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-md bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold flex items-center justify-between shadow-xs transition-colors"
+                  className="w-full py-2.5 sm:py-3 px-[clamp(8px,2.2vw,16px)] rounded-md bg-[#25D366] hover:bg-[#20ba59] text-white text-[clamp(10px,2.5vw,12px)] font-semibold flex items-center justify-between gap-2 shadow-xs transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <MessageCircle size={16} />
-                    <span>Chat on WhatsApp: {whatsapp}</span>
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <MessageCircle size={15} className="shrink-0" />
+                    <span className="truncate">Chat on WhatsApp: <span className="font-mono">{whatsapp}</span></span>
                   </div>
-                  <span className="text-[11px] text-white/90">Instant Reply →</span>
+                  <span className="text-[clamp(9px,2.2vw,11px)] text-white/90 font-medium shrink-0 whitespace-nowrap">Instant Reply →</span>
                 </a>
 
-                <div className="pt-1 flex items-center gap-2 text-xs text-stone-600">
-                  <Mail size={15} className="text-[#8C6D46]" />
-                  <span>Email: <a href={`mailto:${email}`} className="text-[#1A1A1A] font-medium">{email}</a></span>
+                <div className="pt-1 flex items-center gap-2 text-[clamp(10px,2.5vw,12px)] text-stone-600 truncate">
+                  <Mail size={15} className="text-[#8C6D46] shrink-0" />
+                  <span className="truncate">Email: <a href={`mailto:${email}`} className="text-[#1A1A1A] font-medium">{email}</a></span>
                 </div>
               </div>
             </div>

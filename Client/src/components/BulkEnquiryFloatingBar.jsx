@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useBulkEnquiry } from '../context/BulkEnquiryContext';
-import { ArrowRight, Check, Layers } from 'lucide-react';
+import { ArrowRight, Check, Layers, X } from 'lucide-react';
 
 export const BulkEnquiryFloatingBar = () => {
   const { distinctCount, totalQuantity, openBulkModal, isBulkModalOpen, notification } = useBulkEnquiry();
+  const [isMinimized, setIsMinimized] = useState(false);
+  const prevCountRef = useRef(distinctCount);
+
+  // Automatically re-expand if a new item is added to the enquiry list
+  useEffect(() => {
+    if (distinctCount > prevCountRef.current) {
+      setIsMinimized(false);
+    }
+    prevCountRef.current = distinctCount;
+  }, [distinctCount]);
+
+  if (distinctCount === 0) return null;
 
   return (
     <>
@@ -19,38 +31,75 @@ export const BulkEnquiryFloatingBar = () => {
         </div>
       )}
 
-      {/* Responsive Floating Bottom Bar when items are selected */}
-      {distinctCount > 0 && !isBulkModalOpen && (
-        <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-40 animate-bounce-subtle pointer-events-auto w-[calc(100%-1.5rem)] max-w-fit sm:max-w-md">
-          <button
-            onClick={openBulkModal}
-            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-[clamp(8px,2.5vw,14px)] px-[clamp(12px,3.5vw,22px)] py-[clamp(8px,2.2vw,13px)] rounded-full bg-[#1A1A1A]/95 hover:bg-[#1A1A1A] backdrop-blur-md text-white shadow-2xl border border-[#C5A880]/70 transition-all hover:scale-[1.02] cursor-pointer group"
-            aria-label="Open bulk enquiry basket"
-          >
-            {/* Counter Badge */}
-            <div className="w-[clamp(24px,6.5vw,32px)] h-[clamp(24px,6.5vw,32px)] rounded-full bg-[#8C6D46] flex items-center justify-center text-white text-[clamp(11px,3vw,13px)] font-bold shrink-0 shadow-sm border border-white/20">
-              {distinctCount}
-            </div>
-
-            {/* Center Fluid Text */}
-            <div className="text-left min-w-0 pr-1 flex-1 sm:flex-initial">
-              <div className="text-[clamp(11px,3vw,13.5px)] font-semibold tracking-wide flex items-center gap-[clamp(4px,1.5vw,8px)] whitespace-nowrap">
-                <span>{distinctCount} {distinctCount === 1 ? 'Door Model' : 'Door Models'} Selected</span>
-                <span className="text-[clamp(9.5px,2.5vw,11.5px)] text-[#C5A880] font-normal">
-                  ({totalQuantity} {totalQuantity === 1 ? 'unit' : 'units'})
+      {/* Floating Bar or Minimized Corner Pill */}
+      {!isBulkModalOpen && (
+        isMinimized ? (
+          /* Minimized Compact Corner Pill (Option C) */
+          <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-40 animate-fadeIn pointer-events-auto">
+            <button
+              onClick={openBulkModal}
+              className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-[#1A1A1A]/95 hover:bg-[#1A1A1A] backdrop-blur-md text-white shadow-2xl border border-[#C5A880]/80 transition-all hover:scale-105 cursor-pointer group"
+              aria-label={`Open bulk enquiry basket (${distinctCount} items)`}
+              title="View selected door models"
+            >
+              <div className="relative flex items-center justify-center">
+                <Layers className="text-[#C5A880] w-[18px] h-[18px]" />
+                <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[#8C6D46] text-white text-[10px] font-bold flex items-center justify-center border border-white/30 shadow-xs">
+                  {distinctCount}
                 </span>
               </div>
-              <div className="text-[clamp(9.5px,2.4vw,11px)] text-stone-300 font-light truncate max-w-[200px] sm:max-w-none">
-                Tap to review & enquire
-              </div>
-            </div>
+              <span className="text-xs font-medium text-stone-200 tracking-wide pr-0.5">
+                Enquiry
+              </span>
+            </button>
+          </div>
+        ) : (
+          /* Full Responsive Floating Bottom Bar with Dismiss × */
+          <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-40 animate-fadeIn pointer-events-auto w-max max-w-[92vw]">
+            <div className="inline-flex items-center rounded-full bg-[#1A1A1A]/95 backdrop-blur-md text-white shadow-2xl border border-[#C5A880]/70 pl-2.5 pr-1.5 py-1 transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+              {/* Clickable Area to open enquiry modal */}
+              <button
+                onClick={openBulkModal}
+                className="flex items-center gap-2 py-0.5 text-left cursor-pointer group"
+                aria-label="Open bulk enquiry basket"
+              >
+                {/* Counter Badge */}
+                <div className="w-6 h-6 rounded-full bg-[#8C6D46] flex items-center justify-center text-white text-[11px] font-bold shrink-0 shadow-sm border border-white/20">
+                  {distinctCount}
+                </div>
 
-            {/* Right Arrow */}
-            <div className="w-[clamp(24px,6.5vw,30px)] h-[clamp(24px,6.5vw,30px)] rounded-full bg-white/10 group-hover:bg-[#8C6D46] flex items-center justify-center transition-colors shrink-0">
-              <ArrowRight className="text-[#FAF9F5] w-[clamp(12px,3vw,14px)] h-[clamp(12px,3vw,14px)]" />
+                {/* Center Fluid Text */}
+                <div className="px-1 text-left">
+                  <div className="text-xs font-semibold tracking-wide flex items-center gap-1.5 whitespace-nowrap">
+                    <span>{distinctCount} {distinctCount === 1 ? 'Door Model' : 'Door Models'}</span>
+                    <span className="text-[10px] text-[#C5A880] font-normal">
+                      ({totalQuantity} {totalQuantity === 1 ? 'unit' : 'units'})
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-stone-300 font-light whitespace-nowrap">
+                    Tap to review & enquire
+                  </div>
+                </div>
+
+                {/* Right Arrow */}
+                <div className="w-5 h-5 rounded-full bg-white/10 group-hover:bg-[#8C6D46] flex items-center justify-center transition-colors shrink-0">
+                  <ArrowRight className="text-[#FAF9F5] w-3 h-3" />
+                </div>
+              </button>
+
+              {/* Dismiss / Minimize button (Option C) */}
+              <div className="h-4 w-px bg-white/20 mx-1" />
+              <button
+                onClick={() => setIsMinimized(true)}
+                className="w-6 h-6 rounded-full hover:bg-white/15 text-stone-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                title="Dismiss to corner pill"
+                aria-label="Dismiss enquiry bar"
+              >
+                <X size={12} />
+              </button>
             </div>
-          </button>
-        </div>
+          </div>
+        )
       )}
     </>
   );

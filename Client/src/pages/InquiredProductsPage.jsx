@@ -159,12 +159,12 @@ export const InquiredProductsPage = () => {
             <p className="text-xs text-[#6B6862] leading-relaxed">
               When you inquire about any door in our catalogue, it will automatically appear here with live status updates.
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex justify-center">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wider uppercase transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-[clamp(11px,2.8vw,12px)] sm:text-xs font-semibold tracking-wider uppercase transition-colors text-center"
               >
-                <ShoppingBag size={14} />
+                <ShoppingBag size={14} className="shrink-0" />
                 <span>Explore Door Catalogue</span>
               </Link>
             </div>
