@@ -59,10 +59,12 @@ export const Navbar = () => {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Identity */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-sm bg-[#1A1A1A] border border-[#8C6D46] flex items-center justify-center text-[#FAF9F5] font-serif font-bold text-xl shadow-sm transition-transform group-hover:scale-105">
-            JT
-          </div>
+        <Link to="/" className="flex items-center gap-3.5 group">
+          <img
+            src="/logo-crest.webp"
+            alt="Janki Traders Crest Logo"
+            className="w-11 h-11 object-contain transition-transform group-hover:scale-105 drop-shadow-xs"
+          />
           <div>
             <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-wide text-[#1A1A1A] block leading-none">
               Janki Traders

@@ -18,10 +18,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#2D2B28]">
           {/* Col 1: Brand intro */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-sm bg-[#8C6D46] text-[#FAF9F5] font-serif font-bold text-xl flex items-center justify-center">
-                JT
-              </div>
+            <div className="flex items-center gap-3.5">
+              <img
+                src="/logo-crest.webp"
+                alt="Janki Traders Crest Logo"
+                className="w-12 h-12 object-contain drop-shadow-sm"
+              />
               <div>
                 <span className="font-serif text-2xl font-semibold tracking-wide text-white block">
                   Janki Traders

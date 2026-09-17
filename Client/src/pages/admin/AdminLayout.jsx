@@ -59,9 +59,11 @@ export const AdminLayout = () => {
           {/* Brand Header */}
           <div className="p-6 border-b border-[#E8E2D5]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded bg-[#1A1A1A] text-white font-serif font-bold text-lg flex items-center justify-center">
-                JT
-              </div>
+              <img
+                src="/logo-crest.webp"
+                alt="Janki Traders Crest Logo"
+                className="w-10 h-10 object-contain drop-shadow-xs"
+              />
               <div>
                 <span className="font-serif text-xl font-semibold text-[#1A1A1A] block leading-none">
                   Janki Traders

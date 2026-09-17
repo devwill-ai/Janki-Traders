@@ -155,7 +155,12 @@ export const HomePage = () => {
       <section className="py-16 sm:py-20 border-b border-[#E8E2D5] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-4">
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8C6D46]">
+            <img
+              src="/logo-crest.webp"
+              alt="Janki Traders Crest"
+              className="w-14 h-14 object-contain mx-auto drop-shadow-sm mb-2"
+            />
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8C6D46] block">
               About Janki Traders
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl text-[#1A1A1A] font-semibold tracking-tight">

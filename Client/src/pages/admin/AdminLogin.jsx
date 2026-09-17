@@ -38,16 +38,20 @@ export const AdminLogin = () => {
     <div className="min-h-screen bg-[#FAF9F5] flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl border border-[#E8E2D5] shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-[#1A1A1A] text-white p-8 text-center space-y-2">
-          <div className="w-12 h-12 rounded-sm bg-[#8C6D46] text-white font-serif font-bold text-2xl flex items-center justify-center mx-auto shadow-md">
-            JT
+        <div className="bg-[#1A1A1A] text-white p-8 text-center space-y-3">
+          <img
+            src="/logo-crest.webp"
+            alt="Janki Traders Crest Logo"
+            className="w-16 h-16 object-contain mx-auto drop-shadow-md"
+          />
+          <div>
+            <h2 className="font-serif text-2xl font-semibold tracking-wide text-white">
+              Janki Traders Admin
+            </h2>
+            <p className="text-xs text-[#C5A880] tracking-wider uppercase font-sans mt-0.5">
+              Digital Catalogue Control Desk
+            </p>
           </div>
-          <h2 className="font-serif text-2xl font-semibold tracking-wide">
-            Janki Traders Admin
-          </h2>
-          <p className="text-xs text-[#C5A880] tracking-wider uppercase font-sans">
-            Digital Catalogue Control Desk
-          </p>
         </div>
 
         {/* Login Form */}
