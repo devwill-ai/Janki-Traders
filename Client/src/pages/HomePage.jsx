@@ -183,7 +183,7 @@ export const HomePage = () => {
     <div className="min-h-screen bg-[#FAF9F5]">
       {/* 1. Hero Section */}
       <section
-        className="relative w-full min-h-screen flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-20 pb-16 sm:pt-24 sm:pb-20"
+        className="relative w-full min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] md:min-h-screen flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-16 pb-14 sm:pt-24 sm:pb-20"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -217,22 +217,22 @@ export const HomePage = () => {
         </div>
 
         {/* Centered Hero Content */}
-        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center flex flex-col items-center justify-center">
+        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-6 sm:py-16 text-center flex flex-col items-center justify-center -translate-y-6 sm:translate-y-0">
           {/* Headline */}
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-6">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.15] sm:leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-5 sm:mb-6">
             Architectural Doors of Timeless Craft & Enduring Strength
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-10">
+          <p className="text-sm sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-10 sm:mb-10">
             Janki Traders supplies premier residential and commercial door collections — from 100% moisture-proof WPC & FRP formulations to handcrafted solid Burma teak and contemporary acoustic glass doors.
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <Link
               to="/shop"
-              className="px-7 py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-3 sm:px-7 sm:py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <span>Explore Full Catalogue</span>
               <ArrowRight size={14} />
@@ -242,7 +242,7 @@ export const HomePage = () => {
               href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Janki Traders, I would like to enquire about your door collections.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-7 py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-3 sm:px-7 sm:py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <MessageCircle size={15} className="text-[#25D366]" />
               <span>WhatsApp Enquiry</span>
@@ -267,14 +267,14 @@ export const HomePage = () => {
         </button>
 
         {/* Slide Indicator Pills */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 bg-black/45 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20">
           {originalHeroSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => handleDotClick(idx)}
               aria-label={`Go to slide ${idx + 1}`}
               className={`transition-all duration-300 rounded-full h-2 cursor-pointer ${activeDot === idx
-                ? 'w-8 bg-[#C5A880]'
+                ? 'w-6 sm:w-8 bg-[#C5A880]'
                 : 'w-2 bg-white/40 hover:bg-white/80'
                 }`}
             />

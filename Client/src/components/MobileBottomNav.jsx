@@ -19,8 +19,8 @@ export const MobileBottomNav = () => {
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F5]/95 backdrop-blur-md border-t border-[#E8E2D5] px-2 py-1.5 shadow-lg">
-      <div className="grid grid-cols-4 items-center max-w-md mx-auto">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FAF9F5]/95 backdrop-blur-md border-t border-[#E8E2D5] px-2 h-16 shadow-lg flex items-center justify-center">
+      <div className="grid grid-cols-4 items-center w-full max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
