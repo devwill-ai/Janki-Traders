@@ -207,9 +207,21 @@ export const InquiredProductsPage = () => {
                       </div>
 
                       <div className="space-y-1 min-w-0">
-                        <span className="text-[10px] font-mono font-semibold tracking-wider text-[#8C6D46] px-1.5 py-0.5 rounded bg-[#FAF9F5] border border-[#E8E2D5]">
-                          {item.product_code || 'JT-CUSTOM'}
-                        </span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-mono font-semibold tracking-wider text-[#8C6D46] px-1.5 py-0.5 rounded bg-[#FAF9F5] border border-[#E8E2D5]">
+                            {item.product_code || 'JT-CUSTOM'}
+                          </span>
+                          {item.quantity > 1 && (
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                              Qty: {item.quantity}
+                            </span>
+                          )}
+                          {item.bulk_id && (
+                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#8C6D46]/10 text-[#8C6D46] border border-[#8C6D46]/20">
+                              Bulk Enquiry
+                            </span>
+                          )}
+                        </div>
                         <h4 className="font-serif text-lg sm:text-xl font-semibold text-[#1A1A1A] truncate">
                           {item.product_name}
                         </h4>

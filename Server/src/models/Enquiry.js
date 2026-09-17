@@ -49,6 +49,16 @@ const enquirySchema = new mongoose.Schema(
       default: 'new',
       index: true,
     },
+    bulk_id: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

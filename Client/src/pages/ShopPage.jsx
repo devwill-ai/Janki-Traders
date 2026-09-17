@@ -147,7 +147,7 @@ export const ShopPage = () => {
                   onClick={openAccessModal}
                   className="px-4 py-1.5 rounded-md bg-[#1A1A1A] text-white text-xs font-semibold hover:bg-[#8C6D46] transition-colors cursor-pointer"
                 >
-                  Request 7-Day Access
+                  Unlock 7-Day Access
                 </button>
               </div>
             )}
@@ -314,7 +314,7 @@ export const ShopPage = () => {
                     onClick={openAccessModal}
                     className="w-full py-2.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-xs font-semibold tracking-wider uppercase transition-all shadow-md cursor-pointer hover:scale-105"
                   >
-                    Request 7-Day Access
+                    Unlock 7-Day Access
                   </button>
                 </div>
               </div>

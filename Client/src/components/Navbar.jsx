@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCustomer } from '../context/CustomerContext';
+import { useBulkEnquiry } from '../context/BulkEnquiryContext';
 import {
   Lock,
   Unlock,
@@ -8,12 +9,13 @@ import {
   ShieldAlert,
   Menu,
   X,
-  UserCheck,
+  Layers,
 } from 'lucide-react';
 
 export const Navbar = () => {
   const location = useLocation();
   const { status, hasRestrictedAccess, daysRemaining, hoursRemaining, openAccessModal, customerName } = useCustomer();
+  const { distinctCount, openBulkModal } = useBulkEnquiry();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -108,21 +110,28 @@ export const Navbar = () => {
           ))}
         </nav>
 
-        {/* Header Right Actions (Admin Portal + Customer Access Status Button) */}
-        <div className="hidden sm:flex items-center gap-3">
-          {/* Admin Login Button */}
-          <Link
-            to="/admin/login"
+        {/* Header Right Actions (Bulk Enquiry + Customer Access Status Button) */}
+        <div className="hidden sm:flex items-center gap-2.5">
+          {/* Bulk Enquiry Basket Button */}
+          <button
+            onClick={openBulkModal}
             className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-              isTransparent
-                ? 'text-white/80 hover:text-white hover:bg-white/10'
-                : 'text-[#6B6862] hover:text-[#1A1A1A] hover:bg-[#E8E2D5]/40'
+              distinctCount > 0
+                ? 'bg-[#8C6D46] hover:bg-[#785c39] text-white shadow-xs'
+                : isTransparent
+                  ? 'text-white/80 hover:text-white hover:bg-white/10'
+                  : 'text-[#6B6862] hover:text-[#1A1A1A] hover:bg-[#E8E2D5]/40'
             }`}
-            title="Admin Portal"
+            title="View Bulk Enquiry List"
           >
-            <UserCheck size={14} />
-            <span>Admin</span>
-          </Link>
+            <Layers size={14} />
+            <span>Enquiry List</span>
+            {distinctCount > 0 && (
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-white text-[#8C6D46]">
+                {distinctCount}
+              </span>
+            )}
+          </button>
 
           {status === 'active' ? (
             <div
@@ -171,7 +180,7 @@ export const Navbar = () => {
               }`}
             >
               <Lock size={13} className="text-[#C5A880]" />
-              <span>Request Full Access</span>
+              <span>Unlock Full Access</span>
             </button>
           )}
         </div>
@@ -220,19 +229,28 @@ export const Navbar = () => {
             </Link>
           ))}
 
-          {/* Admin Login Link in Mobile Menu */}
-          <Link
-            to="/admin/login"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+          {/* Bulk Enquiry Link in Mobile Menu */}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              openBulkModal();
+            }}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium ${
               isTransparent
                 ? 'text-white/80 hover:bg-white/10'
                 : 'text-[#4A4742] hover:bg-[#E8E2D5]/30'
             }`}
           >
-            <UserCheck size={16} />
-            <span>Admin Portal</span>
-          </Link>
+            <div className="flex items-center gap-2">
+              <Layers size={16} />
+              <span>Bulk Enquiry List</span>
+            </div>
+            {distinctCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#8C6D46] text-white">
+                {distinctCount} items
+              </span>
+            )}
+          </button>
 
           <div className={`pt-3 border-t ${isTransparent ? 'border-white/15' : 'border-[#E8E2D5]'}`}>
             <button
@@ -259,7 +277,7 @@ export const Navbar = () => {
               ) : (
                 <>
                   <Lock size={16} className={isTransparent ? 'text-[#1A1A1A]' : 'text-[#C5A880]'} />
-                  <span>Request Full Catalogue Access</span>
+                  <span>Unlock Full Access</span>
                 </>
               )}
             </button>

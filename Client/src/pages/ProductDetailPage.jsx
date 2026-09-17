@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api, getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
+import { useBulkEnquiry } from '../context/BulkEnquiryContext';
 import { EnquiryModal } from '../components/EnquiryModal';
 import {
   ArrowLeft,
@@ -14,12 +15,15 @@ import {
   CheckCircle2,
   Share2,
   Check,
+  Plus,
+  Layers,
 } from 'lucide-react';
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { hasRestrictedAccess, openAccessModal, settings } = useCustomer();
+  const { isInBulk, toggleBulk, openBulkModal } = useBulkEnquiry();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -100,7 +104,7 @@ export const ProductDetailPage = () => {
               onClick={openAccessModal}
               className="w-full py-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wider uppercase transition-colors"
             >
-              Request 7-Day Access
+              Unlock 7-Day Access
             </button>
             <Link
               to="/shop"
@@ -236,11 +240,24 @@ export const ProductDetailPage = () => {
             {/* Action Buttons */}
             <div className="pt-6 border-t border-[#E8E2D5] space-y-3">
               <button
+                type="button"
+                onClick={() => toggleBulk(product)}
+                className={`w-full py-[clamp(10px,2.5vw,14px)] px-3 rounded-md text-[clamp(11px,2.6vw,12px)] font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer border ${
+                  isInBulk(product?._id)
+                    ? 'bg-[#8C6D46] hover:bg-[#785c39] text-white border-[#8C6D46] shadow-xs'
+                    : 'bg-[#FAF9F5] hover:bg-[#E8E2D5] text-[#1A1A1A] border-[#E8E2D5]'
+                }`}
+              >
+                {isInBulk(product?._id) ? <Check size={16} className="stroke-[2.5]" /> : <Plus size={16} />}
+                <span>{isInBulk(product?._id) ? 'In Bulk Enquiry List (Remove)' : 'Add to Bulk Enquiry List'}</span>
+              </button>
+
+              <button
                 onClick={() => setIsEnquiryModalOpen(true)}
                 className="w-full py-3.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
               >
                 <MessageSquare size={16} />
-                <span>Submit Product Enquiry</span>
+                <span>Submit Single Product Enquiry</span>
               </button>
 
               <a
