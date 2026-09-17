@@ -183,7 +183,7 @@ export const HomePage = () => {
     <div className="min-h-screen bg-[#FAF9F5]">
       {/* 1. Hero Section */}
       <section
-        className="relative w-full min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] md:min-h-screen flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-16 pb-14 sm:pt-24 sm:pb-20"
+        className="relative w-full hero-mobile-viewport flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-16 pb-12 sm:pt-24 sm:pb-20"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -217,22 +217,22 @@ export const HomePage = () => {
         </div>
 
         {/* Centered Hero Content */}
-        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-6 sm:py-16 text-center flex flex-col items-center justify-center -translate-y-6 sm:translate-y-0">
+        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-16 text-center flex flex-col items-center justify-center">
           {/* Headline */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.15] sm:leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-5 sm:mb-6">
+          <h1 className="font-serif text-[1.65rem] sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.18] sm:leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-3 sm:mb-6">
             Architectural Doors of Timeless Craft & Enduring Strength
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-10 sm:mb-10">
+          <p className="text-[13px] sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-6 sm:mb-10">
             Janki Traders supplies premier residential and commercial door collections — from 100% moisture-proof WPC & FRP formulations to handcrafted solid Burma teak and contemporary acoustic glass doors.
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4">
             <Link
               to="/shop"
-              className="px-5 py-3 sm:px-7 sm:py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <span>Explore Full Catalogue</span>
               <ArrowRight size={14} />
@@ -242,7 +242,7 @@ export const HomePage = () => {
               href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Janki Traders, I would like to enquire about your door collections.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-3 sm:px-7 sm:py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <MessageCircle size={15} className="text-[#25D366]" />
               <span>WhatsApp Enquiry</span>
@@ -267,7 +267,7 @@ export const HomePage = () => {
         </button>
 
         {/* Slide Indicator Pills */}
-        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 bg-black/45 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20">
+        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 bg-black/45 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20">
           {originalHeroSlides.map((_, idx) => (
             <button
               key={idx}
@@ -291,13 +291,13 @@ export const HomePage = () => {
               alt="Janki Traders Crest"
               className="w-14 h-14 object-contain mx-auto drop-shadow-sm mb-2"
             />
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8C6D46] block">
+            <span className="text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-[0.2em] uppercase text-[#8C6D46] block">
               About Janki Traders
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-[#1A1A1A] font-semibold tracking-tight">
+            <h2 className="font-serif text-[clamp(1.5rem,4vw+0.25rem,2.25rem)] text-[#1A1A1A] font-semibold tracking-tight leading-[1.2]">
               Distributor of Engineered Doors for Architects, Builders & Modern Homes
             </h2>
-            <p className="text-sm sm:text-base text-[#6B6862] font-light leading-relaxed">
+            <p className="text-[clamp(0.875rem,2vw,1rem)] text-[#6B6862] font-light leading-relaxed">
               For over two decades, Janki Traders has stood as an authoritative wholesale partner for contractors, architects, and selective homeowners. We curate specialized door assemblies that eliminate common defects like warping, swelling, and termite intrusion while delivering distinguished curb appeal.
             </p>
           </div>
@@ -308,10 +308,10 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
                 <Droplets size={20} />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                 100% Waterproof Formulations
               </h3>
-              <p className="text-xs text-[#6B6862] leading-relaxed">
+              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
                 Engineered FRP and WPC doors that withstand high humidity, direct shower spray, and moisture without rotting or swelling.
               </p>
             </div>
@@ -320,10 +320,10 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
                 <Layers size={20} />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                 Fluted & Modern Glass Designs
               </h3>
-              <p className="text-xs text-[#6B6862] leading-relaxed">
+              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
                 Toughened fluted, reeded, and frosted glass framed in ultra-slim matte aluminum profiles for refined interior partitions.
               </p>
             </div>
@@ -332,10 +332,10 @@ export const HomePage = () => {
               <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
                 <Compass size={20} />
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                 Bespoke Artisanal Teak
               </h3>
-              <p className="text-xs text-[#6B6862] leading-relaxed">
+              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
                 Seasoned Burma teak and handcrafted entrance doors with custom brass inlays and multi-point smart locking compatibility.
               </p>
             </div>
@@ -348,16 +348,16 @@ export const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8C6D46]">
+              <span className="text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-[0.2em] uppercase text-[#8C6D46]">
                 Our Collections
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#1A1A1A] font-semibold mt-1">
+              <h2 className="font-serif text-[clamp(1.5rem,4vw+0.25rem,2.25rem)] text-[#1A1A1A] font-semibold mt-1 leading-[1.2]">
                 Explore Door Categories
               </h2>
             </div>
             <Link
               to="/shop"
-              className="text-xs font-semibold tracking-wider uppercase text-[#8C6D46] hover:text-[#1A1A1A] flex items-center gap-1 transition-colors"
+              className="text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase text-[#8C6D46] hover:text-[#1A1A1A] flex items-center gap-1 transition-colors"
             >
               <span>View All Categories</span>
               <ArrowRight size={14} />
@@ -380,13 +380,13 @@ export const HomePage = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
 
                 <div className="relative z-10 text-white space-y-1.5">
-                  <span className="text-[11px] uppercase tracking-wider text-[#C5A880] font-medium block">
+                  <span className="text-[clamp(0.625rem,1.5vw,0.6875rem)] uppercase tracking-wider text-[#C5A880] font-medium block">
                     {cat.productCount || 0} Models Available
                   </span>
-                  <h3 className="font-serif text-2xl font-semibold leading-snug text-white group-hover:text-[#C5A880] transition-colors">
+                  <h3 className="font-serif text-[clamp(1.25rem,3vw,1.5rem)] font-semibold leading-snug text-white group-hover:text-[#C5A880] transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-stone-300 font-light line-clamp-2">
+                  <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-stone-300 font-light line-clamp-2 leading-relaxed">
                     {cat.description}
                   </p>
                 </div>
@@ -401,16 +401,16 @@ export const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8C6D46]">
+              <span className="text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-[0.2em] uppercase text-[#8C6D46]">
                 Featured Selections
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[#1A1A1A] font-semibold mt-1">
+              <h2 className="font-serif text-[clamp(1.5rem,4vw+0.25rem,2.25rem)] text-[#1A1A1A] font-semibold mt-1 leading-[1.2]">
                 Handcrafted Door Highlights
               </h2>
             </div>
             <Link
               to="/shop"
-              className="text-xs font-semibold tracking-wider uppercase text-[#8C6D46] hover:text-[#1A1A1A] flex items-center gap-1 transition-colors"
+              className="text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase text-[#8C6D46] hover:text-[#1A1A1A] flex items-center gap-1 transition-colors"
             >
               <span>Explore Complete Catalogue</span>
               <ArrowRight size={14} />
@@ -440,16 +440,16 @@ export const HomePage = () => {
       {/* 5. 7-Day Access Banner CTA (Section 4 & 8) */}
       <section className="py-16 sm:py-20 bg-[#1A1A1A] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-[#C5A880]/40 text-[#C5A880] text-xs font-semibold tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-[#C5A880]/40 text-[#C5A880] text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-widest uppercase">
             <Lock size={13} />
             <span>Controlled Access System</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-5xl font-semibold tracking-tight text-[#FAF9F5] leading-tight">
+          <h2 className="font-serif text-[clamp(1.75rem,5vw+0.25rem,3rem)] font-semibold tracking-tight text-[#FAF9F5] leading-tight">
             Unlock Our Complete Architectural Catalogue
           </h2>
 
-          <p className="text-sm sm:text-base text-stone-300 font-light max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[clamp(0.875rem,2vw,1rem)] text-stone-300 font-light max-w-2xl mx-auto leading-relaxed">
             Gain immediate 7-day unrestricted access to explore exclusive trade pricing, concealed pivot systems, and limited-edition door collections. Simply submit your name and mobile number.
           </p>
 
@@ -457,14 +457,14 @@ export const HomePage = () => {
             {status === 'active' ? (
               <Link
                 to="/shop"
-                className="px-8 py-3.5 rounded-md bg-[#8C6D46] hover:bg-[#a37e50] text-white text-xs font-semibold tracking-wider uppercase transition-all shadow-md"
+                className="px-8 py-3.5 rounded-md bg-[#8C6D46] hover:bg-[#a37e50] text-white text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase transition-all shadow-md"
               >
                 Browse Full Catalogue ({daysRemaining}d Left)
               </Link>
             ) : (
               <button
                 onClick={openAccessModal}
-                className="px-8 py-3.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-xs font-semibold tracking-wider uppercase transition-all shadow-lg hover:scale-105 cursor-pointer"
+                className="px-8 py-3.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase transition-all shadow-lg hover:scale-105 cursor-pointer"
               >
                 Request 7-Day Access
               </button>
@@ -472,7 +472,7 @@ export const HomePage = () => {
 
             <Link
               to="/contact"
-              className="px-8 py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-white text-xs font-semibold tracking-wider uppercase border border-white/20 transition-all"
+              className="px-8 py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-white text-[clamp(0.6875rem,1.5vw,0.75rem)] font-semibold tracking-wider uppercase border border-white/20 transition-all"
             >
               Visit Our Showroom
             </Link>
@@ -489,10 +489,10 @@ export const HomePage = () => {
                 <MapPin size={22} />
               </div>
               <div>
-                <h4 className="font-serif text-lg font-semibold text-[#1A1A1A]">
+                <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                   Showroom & Wholesale Depot
                 </h4>
-                <p className="text-xs text-[#6B6862] mt-1 leading-relaxed">
+                <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] mt-1 leading-relaxed">
                   {address}
                 </p>
               </div>
@@ -503,10 +503,10 @@ export const HomePage = () => {
                 <Clock size={22} />
               </div>
               <div>
-                <h4 className="font-serif text-lg font-semibold text-[#1A1A1A]">
+                <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                   Business Hours
                 </h4>
-                <p className="text-xs text-[#6B6862] mt-1 leading-relaxed">
+                <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] mt-1 leading-relaxed">
                   Mon - Sat: 9:30 AM to 8:00 PM<br />
                   Sunday Open by Prior Trade Appointment
                 </p>
@@ -518,10 +518,10 @@ export const HomePage = () => {
                 <Phone size={22} />
               </div>
               <div>
-                <h4 className="font-serif text-lg font-semibold text-[#1A1A1A]">
+                <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
                   Direct Trade Assistance
                 </h4>
-                <p className="text-xs text-[#6B6862] mt-1 leading-relaxed">
+                <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] mt-1 leading-relaxed">
                   Call: <a href={`tel:${phone}`} className="font-semibold text-[#1A1A1A]">{phone}</a><br />
                   WhatsApp Direct Enquiry Available 24/7
                 </p>

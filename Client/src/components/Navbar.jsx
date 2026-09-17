@@ -197,8 +197,8 @@ export const Navbar = () => {
         <div
           className={`md:hidden border-t px-4 pt-3 pb-5 space-y-2 animate-fadeIn ${
             isTransparent
-              ? 'bg-[#14120E]/95 backdrop-blur-xl border-white/15 text-white shadow-2xl'
-              : 'bg-[#FAF9F5] border-[#E8E2D5] text-[#1A1A1A]'
+              ? 'bg-black/25 backdrop-blur-md border-white/15 text-white shadow-lg'
+              : 'bg-[#FAF9F5]/95 backdrop-blur-md border-[#E8E2D5] text-[#1A1A1A] shadow-md'
           }`}
         >
           {navLinks.map((link) => (

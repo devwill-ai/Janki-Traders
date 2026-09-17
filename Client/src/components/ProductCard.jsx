@@ -84,11 +84,11 @@ export const ProductCard = ({ product, onInquireClick }) => {
       {/* Content Area */}
       <div className="p-5 flex flex-col flex-grow justify-between bg-white">
         <div>
-          <h3 className="font-serif text-xl font-semibold text-[#1A1A1A] group-hover:text-[#8C6D46] transition-colors line-clamp-1 leading-snug">
+          <h3 className="font-serif text-[clamp(1.05rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] group-hover:text-[#8C6D46] transition-colors line-clamp-1 leading-snug">
             {product.name}
           </h3>
 
-          <p className="mt-2 text-xs text-[#6B6862] line-clamp-2 leading-relaxed font-light">
+          <p className="mt-2 text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] line-clamp-2 leading-relaxed font-light">
             {product.description || 'Premium architectural door crafted with precision engineering and high-durability specifications.'}
           </p>
         </div>

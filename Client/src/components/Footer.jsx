@@ -25,18 +25,18 @@ export const Footer = () => {
                 className="w-12 h-12 object-contain drop-shadow-sm"
               />
               <div>
-                <span className="font-serif text-2xl font-semibold tracking-wide text-white block">
+                <span className="font-serif text-[clamp(1.25rem,3vw,1.5rem)] font-semibold tracking-wide text-white block">
                   Janki Traders
                 </span>
-                <span className="text-[10px] tracking-[0.2em] uppercase font-sans text-[#C5A880] block font-medium">
+                <span className="text-[clamp(0.5625rem,1.2vw,0.625rem)] tracking-[0.2em] uppercase font-sans text-[#C5A880] block font-medium">
                   Architectural Doors
                 </span>
               </div>
             </div>
-            <p className="text-sm text-stone-400 font-light leading-relaxed">
+            <p className="text-[clamp(0.8125rem,1.8vw,0.875rem)] text-stone-400 font-light leading-relaxed">
               Distributor and wholesaler of high-grade architectural doors. Specializing in 100% waterproof WPC & FRP doors, fluted glass double doors, solid Burma teak, and designer pivot entrances.
             </p>
-            <div className="pt-2 flex items-center gap-3 text-xs text-[#C5A880]">
+            <div className="pt-2 flex items-center gap-3 text-[clamp(0.6875rem,1.5vw,0.75rem)] text-[#C5A880]">
               <ShieldCheck size={16} />
               <span>Certified Quality & Moisture-Resistant Formulations</span>
             </div>
@@ -44,10 +44,10 @@ export const Footer = () => {
 
           {/* Col 2: Door Categories */}
           <div>
-            <h4 className="font-serif text-lg text-white font-medium mb-4 tracking-wide">
+            <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.15rem)] text-white font-medium mb-4 tracking-wide">
               Door Collections
             </h4>
-            <ul className="space-y-2.5 text-sm text-stone-400">
+            <ul className="space-y-2.5 text-[clamp(0.8125rem,1.8vw,0.875rem)] text-stone-400">
               <li>
                 <Link to="/shop?category=waterproof-doors" className="hover:text-[#C5A880] transition-colors flex items-center gap-1.5">
                   <span>Waterproof WPC & FRP Doors</span>
@@ -78,10 +78,10 @@ export const Footer = () => {
 
           {/* Col 3: Customer Navigation */}
           <div>
-            <h4 className="font-serif text-lg text-white font-medium mb-4 tracking-wide">
+            <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.15rem)] text-white font-medium mb-4 tracking-wide">
               Quick Navigation
             </h4>
-            <ul className="space-y-2.5 text-sm text-stone-400">
+            <ul className="space-y-2.5 text-[clamp(0.8125rem,1.8vw,0.875rem)] text-stone-400">
               <li>
                 <Link to="/" className="hover:text-[#C5A880] transition-colors">
                   Home
@@ -113,10 +113,10 @@ export const Footer = () => {
 
           {/* Col 4: Contact channels */}
           <div className="space-y-4">
-            <h4 className="font-serif text-lg text-white font-medium tracking-wide">
+            <h4 className="font-serif text-[clamp(1.05rem,2.5vw,1.15rem)] text-white font-medium tracking-wide">
               Showroom & Contacts
             </h4>
-            <div className="space-y-3 text-xs text-stone-400 leading-relaxed">
+            <div className="space-y-3 text-[clamp(0.75rem,1.8vw,0.8125rem)] text-stone-400 leading-relaxed">
               <div className="flex items-start gap-2.5">
                 <MapPin size={16} className="text-[#C5A880] shrink-0 mt-0.5" />
                 <span>{address}</span>
