@@ -44,24 +44,75 @@ export const HomePage = () => {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-advance infinite slider every 5 seconds
+  // Safety clamp: prevents index from ever translating into empty space
+  const safeIndex =
+    currentIndex >= 0 && currentIndex < carouselSlides.length
+      ? currentIndex
+      : 1;
+
+  // Pause carousel when tab is inactive/minimized to prevent timer desync and runaway increments
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsPaused(true);
+      } else {
+        setIsPaused(false);
+        // Clean snap back if left on a boundary during tab sleep
+        setCurrentIndex((prev) => {
+          if (prev >= carouselSlides.length - 1) return 1;
+          if (prev <= 0) return originalHeroSlides.length;
+          return prev;
+        });
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  // Auto-advance infinite slider every 5 seconds (self-healing)
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
-      setIsTransitioning(true);
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex((prev) => {
+        // If already at or beyond the clone of the first slide, snap to 1 first
+        if (prev >= carouselSlides.length - 1) {
+          setIsTransitioning(false);
+          return 1;
+        }
+        setIsTransitioning(true);
+        return prev + 1;
+      });
     }, 5000);
 
     return () => clearInterval(timer);
   }, [isPaused]);
 
+  // Fallback safety: if onTransitionEnd is dropped due to browser throttling or blur,
+  // silently snap boundary clones 150ms after the 1000ms transition finishes.
+  useEffect(() => {
+    if (currentIndex >= carouselSlides.length - 1) {
+      const fallback = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(1);
+      }, 1150);
+      return () => clearTimeout(fallback);
+    } else if (currentIndex <= 0) {
+      const fallback = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(originalHeroSlides.length);
+      }, 1150);
+      return () => clearTimeout(fallback);
+    }
+  }, [currentIndex]);
+
   // Seamless jump between clones and originals without rewinding
   const handleTransitionEnd = () => {
-    if (currentIndex === carouselSlides.length - 1) {
+    if (currentIndex >= carouselSlides.length - 1) {
       setIsTransitioning(false);
       setCurrentIndex(1);
-    } else if (currentIndex === 0) {
+    } else if (currentIndex <= 0) {
       setIsTransitioning(false);
       setCurrentIndex(originalHeroSlides.length);
     }
@@ -81,12 +132,18 @@ export const HomePage = () => {
 
   const handleNextSlide = () => {
     setIsTransitioning(true);
-    setCurrentIndex((prev) => prev + 1);
+    setCurrentIndex((prev) => {
+      if (prev >= carouselSlides.length - 1) return 1;
+      return prev + 1;
+    });
   };
 
   const handlePrevSlide = () => {
     setIsTransitioning(true);
-    setCurrentIndex((prev) => prev - 1);
+    setCurrentIndex((prev) => {
+      if (prev <= 0) return originalHeroSlides.length;
+      return prev - 1;
+    });
   };
 
   const handleDotClick = (dotIdx) => {
@@ -94,7 +151,7 @@ export const HomePage = () => {
     setCurrentIndex(dotIdx + 1);
   };
 
-  const activeDot = (currentIndex - 1 + originalHeroSlides.length) % originalHeroSlides.length;
+  const activeDot = (safeIndex - 1 + originalHeroSlides.length) % originalHeroSlides.length;
 
   useEffect(() => {
     const loadHomeData = async () => {
@@ -135,7 +192,7 @@ export const HomePage = () => {
           <div
             className="flex h-full w-full"
             style={{
-              transform: `translateX(-${currentIndex * 100}%)`,
+              transform: `translateX(-${safeIndex * 100}%)`,
               transition: isTransitioning
                 ? 'transform 1000ms cubic-bezier(0.25, 1, 0.5, 1)'
                 : 'none',
@@ -153,10 +210,10 @@ export const HomePage = () => {
             ))}
           </div>
 
-          {/* Luxury Architectural Contrast Overlays */}
-          <div className="absolute inset-0 bg-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/65" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.65)_100%)] pointer-events-none" />
+          {/* Luxury Architectural Contrast Overlays - Adjusted for image clarity */}
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/40" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.35)_100%)] pointer-events-none" />
         </div>
 
         {/* Centered Hero Content */}
@@ -216,11 +273,10 @@ export const HomePage = () => {
               key={idx}
               onClick={() => handleDotClick(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className={`transition-all duration-300 rounded-full h-2 cursor-pointer ${
-                activeDot === idx
-                  ? 'w-8 bg-[#C5A880]'
-                  : 'w-2 bg-white/40 hover:bg-white/80'
-              }`}
+              className={`transition-all duration-300 rounded-full h-2 cursor-pointer ${activeDot === idx
+                ? 'w-8 bg-[#C5A880]'
+                : 'w-2 bg-white/40 hover:bg-white/80'
+                }`}
             />
           ))}
         </div>
