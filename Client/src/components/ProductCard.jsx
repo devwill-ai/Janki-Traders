@@ -74,15 +74,23 @@ export const ProductCard = ({ product, onInquireClick }) => {
 
         {/* Restricted Locked Overlay (if locked) */}
         {isLocked && (
-          <div className="absolute inset-0 bg-[#1A1A1A]/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-[#1A1A1A]/90 border border-[#C5A880] flex items-center justify-center text-[#C5A880] mb-2 shadow-lg">
+          <div
+            onClick={openAccessModal}
+            className="absolute inset-0 bg-[#1A1A1A]/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center cursor-pointer transition-colors hover:bg-[#1A1A1A]/50"
+            title="Click to request 7-day trade access"
+          >
+            <div className="w-12 h-12 rounded-full bg-[#1A1A1A]/90 border border-[#C5A880] flex items-center justify-center text-[#C5A880] mb-2 shadow-lg group-hover:scale-105 transition-transform">
               <Lock size={20} />
             </div>
             <p className="text-white text-[clamp(11px,2.8vw,12px)] font-medium font-sans max-w-[180px] mb-3 leading-snug drop-shadow-sm">
               Exclusive Trade Catalogue. Active 7-day access required.
             </p>
             <button
-              onClick={openAccessModal}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openAccessModal();
+              }}
               className="px-3.5 py-1.5 rounded-md bg-[#FAF9F5] hover:bg-white text-[#1A1A1A] text-[clamp(10px,2.6vw,12px)] font-semibold shadow-md transition-all hover:scale-105 cursor-pointer"
             >
               Unlock Access
@@ -93,7 +101,7 @@ export const ProductCard = ({ product, onInquireClick }) => {
 
       {/* Content Area */}
       <div className="p-[clamp(14px,3.5vw,20px)] flex flex-col flex-grow justify-between bg-white">
-        <div>
+        <div onClick={isLocked ? openAccessModal : undefined} className={isLocked ? 'cursor-pointer' : ''}>
           <h3 className="font-serif text-[clamp(16px,3.8vw,20px)] font-semibold text-[#1A1A1A] group-hover:text-[#8C6D46] transition-colors line-clamp-1 leading-snug">
             {product.name}
           </h3>

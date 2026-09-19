@@ -352,7 +352,7 @@ export const getAdminProducts = async (req, res, next) => {
 
 export const createProduct = async (req, res, next) => {
   try {
-    const { name, product_code, category_id, description, visibility, featured, status, images } = req.body;
+    const { name, product_code, category_id, description, visibility, featured, status } = req.body;
 
     if (!name || !category_id) {
       return res.status(400).json({ success: false, message: 'Product name and category are required.' });
@@ -371,18 +371,11 @@ export const createProduct = async (req, res, next) => {
     }
 
     let productImages = [];
-    if (Array.isArray(images)) {
-      productImages = images;
-    } else if (typeof images === 'string' && images.trim()) {
-      productImages = images.split(',').map((u) => u.trim());
-    }
-
-    // If file uploaded via Multer
+    // Files uploaded directly from system via Multer
     if (req.files && req.files.length > 0) {
-      const uploadedPaths = req.files.map((file) => `/uploads/${file.filename}`);
-      productImages = [...uploadedPaths, ...productImages];
+      productImages = req.files.map((file) => `/uploads/${file.filename}`);
     } else if (req.file) {
-      productImages.unshift(`/uploads/${req.file.filename}`);
+      productImages = [`/uploads/${req.file.filename}`];
     }
 
     const product = new Product({
@@ -412,7 +405,7 @@ export const createProduct = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, product_code, category_id, description, visibility, featured, status, images } = req.body;
+    const { name, product_code, category_id, description, visibility, featured, status, existingImages } = req.body;
 
     const product = await Product.findById(id);
     if (!product) {
@@ -427,16 +420,27 @@ export const updateProduct = async (req, res, next) => {
     if (featured !== undefined) product.featured = featured === true || featured === 'true';
     if (status) product.status = status;
 
-    if (images !== undefined) {
-      if (Array.isArray(images)) product.images = images;
-      else if (typeof images === 'string') product.images = images.split(',').map((u) => u.trim()).filter(Boolean);
+    // Handle existing images retained from client
+    let keptImages = [];
+    if (existingImages !== undefined) {
+      try {
+        keptImages = typeof existingImages === 'string' ? JSON.parse(existingImages) : existingImages;
+      } catch {
+        keptImages = Array.isArray(existingImages) ? existingImages : [];
+      }
+    } else {
+      keptImages = product.images || [];
     }
 
-    // Attach uploaded files if any
+    // Attach newly uploaded files from system
+    let newImages = [];
     if (req.files && req.files.length > 0) {
-      const uploadedPaths = req.files.map((file) => `/uploads/${file.filename}`);
-      product.images = [...uploadedPaths, ...product.images];
+      newImages = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (req.file) {
+      newImages = [`/uploads/${req.file.filename}`];
     }
+
+    product.images = [...newImages, ...keptImages];
 
     await product.save();
     await product.populate('category_id', 'name slug');
@@ -494,7 +498,7 @@ export const getAdminCategories = async (req, res, next) => {
 
 export const createCategory = async (req, res, next) => {
   try {
-    const { name, image, description, status, order } = req.body;
+    const { name, description, status, order } = req.body;
 
     if (!name || !name.trim()) {
       return res.status(400).json({ success: false, message: 'Category name is required.' });
@@ -507,7 +511,7 @@ export const createCategory = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Category with this name already exists.' });
     }
 
-    let categoryImage = image || '';
+    let categoryImage = '';
     if (req.file) {
       categoryImage = `/uploads/${req.file.filename}`;
     }
@@ -536,7 +540,7 @@ export const createCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, image, description, status, order } = req.body;
+    const { name, description, status, order } = req.body;
 
     const category = await Category.findById(id);
     if (!category) {
@@ -551,7 +555,6 @@ export const updateCategory = async (req, res, next) => {
     if (status) category.status = status;
     if (order !== undefined) category.order = Number(order);
 
-    if (image !== undefined) category.image = image;
     if (req.file) {
       category.image = `/uploads/${req.file.filename}`;
     }

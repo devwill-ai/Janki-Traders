@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
@@ -42,7 +42,15 @@ export const HomePage = () => {
   // Infinite Hero Slider State
   const [currentIndex, setCurrentIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isControlsHovered, setIsControlsHovered] = useState(false);
+  const [isTabHidden, setIsTabHidden] = useState(
+    typeof document !== 'undefined' ? document.hidden : false
+  );
+  const [isInView, setIsInView] = useState(true);
+
+  const heroRef = useRef(null);
+  const timerRef = useRef(null);
+  const isNavigatingRef = useRef(false);
 
   // Safety clamp: prevents index from ever translating into empty space
   const safeIndex =
@@ -50,14 +58,25 @@ export const HomePage = () => {
       ? currentIndex
       : 1;
 
-  // Pause carousel when tab is inactive/minimized to prevent timer desync and runaway increments
+  // Viewport intersection observer: pauses slider when scrolled away to save resources
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Window visibility: pause slider when tab is inactive/minimized
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setIsPaused(true);
-      } else {
-        setIsPaused(false);
-        // Clean snap back if left on a boundary during tab sleep
+      setIsTabHidden(document.hidden);
+      if (!document.hidden) {
+        // Clean snap back if left on boundary during tab sleep
         setCurrentIndex((prev) => {
           if (prev >= carouselSlides.length - 1) return 1;
           if (prev <= 0) return originalHeroSlides.length;
@@ -70,45 +89,35 @@ export const HomePage = () => {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  // Auto-advance infinite slider every 5 seconds (self-healing)
-  useEffect(() => {
-    if (isPaused) return;
+  // Advance to next slide
+  const advanceToNext = useCallback(() => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => {
+      if (prev >= carouselSlides.length - 1) return 1;
+      return prev + 1;
+    });
+  }, []);
 
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => {
-        // If already at or beyond the clone of the first slide, snap to 1 first
-        if (prev >= carouselSlides.length - 1) {
-          setIsTransitioning(false);
-          return 1;
-        }
-        setIsTransitioning(true);
-        return prev + 1;
-      });
-    }, 5000);
+  // Advance to previous slide
+  const advanceToPrev = useCallback(() => {
+    setIsTransitioning(true);
+    setCurrentIndex((prev) => {
+      if (prev <= 0) return originalHeroSlides.length;
+      return prev - 1;
+    });
+  }, []);
 
-    return () => clearInterval(timer);
-  }, [isPaused]);
+  // Jump to specific slide dot
+  const jumpToSlide = useCallback((dotIdx) => {
+    setIsTransitioning(true);
+    setCurrentIndex(dotIdx + 1);
+  }, []);
 
-  // Fallback safety: if onTransitionEnd is dropped due to browser throttling or blur,
-  // silently snap boundary clones 150ms after the 1000ms transition finishes.
-  useEffect(() => {
-    if (currentIndex >= carouselSlides.length - 1) {
-      const fallback = setTimeout(() => {
-        setIsTransitioning(false);
-        setCurrentIndex(1);
-      }, 1150);
-      return () => clearTimeout(fallback);
-    } else if (currentIndex <= 0) {
-      const fallback = setTimeout(() => {
-        setIsTransitioning(false);
-        setCurrentIndex(originalHeroSlides.length);
-      }, 1150);
-      return () => clearTimeout(fallback);
-    }
-  }, [currentIndex]);
+  // Seamless jump between boundary clones and originals without rewinding
+  const handleTransitionEnd = (e) => {
+    // Only handle transform transitions directly from the slider track
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform') return;
 
-  // Seamless jump between clones and originals without rewinding
-  const handleTransitionEnd = () => {
     if (currentIndex >= carouselSlides.length - 1) {
       setIsTransitioning(false);
       setCurrentIndex(1);
@@ -130,25 +139,68 @@ export const HomePage = () => {
     }
   }, [isTransitioning]);
 
+  // Fallback safety: if onTransitionEnd is dropped by browser throttling or blur
+  useEffect(() => {
+    if (currentIndex >= carouselSlides.length - 1) {
+      const fallback = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(1);
+      }, 1150);
+      return () => clearTimeout(fallback);
+    } else if (currentIndex <= 0) {
+      const fallback = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrentIndex(originalHeroSlides.length);
+      }, 1150);
+      return () => clearTimeout(fallback);
+    }
+  }, [currentIndex]);
+
+  // Self-healing auto-advance timer with clean reset upon interaction
+  useEffect(() => {
+    if (isControlsHovered || isTabHidden || !isInView) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      advanceToNext();
+    }, 5000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isControlsHovered, isTabHidden, isInView, currentIndex, advanceToNext]);
+
+  // Debounced user manual navigation controls
   const handleNextSlide = () => {
-    setIsTransitioning(true);
-    setCurrentIndex((prev) => {
-      if (prev >= carouselSlides.length - 1) return 1;
-      return prev + 1;
-    });
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 450);
+
+    advanceToNext();
   };
 
   const handlePrevSlide = () => {
-    setIsTransitioning(true);
-    setCurrentIndex((prev) => {
-      if (prev <= 0) return originalHeroSlides.length;
-      return prev - 1;
-    });
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 450);
+
+    advanceToPrev();
   };
 
   const handleDotClick = (dotIdx) => {
-    setIsTransitioning(true);
-    setCurrentIndex(dotIdx + 1);
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 450);
+
+    jumpToSlide(dotIdx);
   };
 
   const activeDot = (safeIndex - 1 + originalHeroSlides.length) % originalHeroSlides.length;
@@ -183,9 +235,8 @@ export const HomePage = () => {
     <div className="min-h-screen bg-[#FAF9F5]">
       {/* 1. Hero Section */}
       <section
+        ref={heroRef}
         className="relative w-full hero-mobile-viewport flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-16 pb-12 sm:pt-24 sm:pb-20"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
       >
         {/* Infinite Background Image Slider */}
         <div className="absolute inset-0 w-full h-full overflow-hidden select-none pointer-events-none">
@@ -250,9 +301,11 @@ export const HomePage = () => {
           </div>
         </div>
 
-        {/* Previous / Next Slide Controls (Desktop) */}
+        {/* Previous / Next Slide Controls (Desktop Only) */}
         <button
           onClick={handlePrevSlide}
+          onMouseEnter={() => setIsControlsHovered(true)}
+          onMouseLeave={() => setIsControlsHovered(false)}
           aria-label="Previous showcase slide"
           className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/35 hover:bg-black/70 border border-white/25 text-white/80 hover:text-white items-center justify-center transition-all backdrop-blur-md cursor-pointer hover:scale-105"
         >
@@ -260,6 +313,8 @@ export const HomePage = () => {
         </button>
         <button
           onClick={handleNextSlide}
+          onMouseEnter={() => setIsControlsHovered(true)}
+          onMouseLeave={() => setIsControlsHovered(false)}
           aria-label="Next showcase slide"
           className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/35 hover:bg-black/70 border border-white/25 text-white/80 hover:text-white items-center justify-center transition-all backdrop-blur-md cursor-pointer hover:scale-105"
         >
@@ -267,7 +322,11 @@ export const HomePage = () => {
         </button>
 
         {/* Slide Indicator Pills */}
-        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 bg-black/45 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20">
+        <div
+          onMouseEnter={() => setIsControlsHovered(true)}
+          onMouseLeave={() => setIsControlsHovered(false)}
+          className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 bg-black/45 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-white/20"
+        >
           {originalHeroSlides.map((_, idx) => (
             <button
               key={idx}

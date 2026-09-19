@@ -1,16 +1,16 @@
 import { Product } from '../models/Product.js';
 import { Category } from '../models/Category.js';
 
-// Get Products (with strict Server-Side Rule 18 access enforcement)
+// Get Products (Returns public and restricted products; restricted items display locked for visitors)
 export const getProducts = async (req, res, next) => {
   try {
-    const { category, search, featured, sort } = req.query;
+    const { category, search, featured, sort, visibility } = req.query;
 
     const query = { status: 'active' };
 
-    // Critical Rule 18: Restrict catalogue items server-side if customer lacks active 7-day access
-    if (!req.hasRestrictedAccess) {
-      query.visibility = 'public';
+    // Support optional visibility filter (all, public, restricted)
+    if (visibility && visibility !== 'all') {
+      query.visibility = visibility;
     }
 
     // Category filter (slug or ObjectId)
@@ -112,11 +112,10 @@ export const getCategories = async (req, res, next) => {
     // Attach product counts for each category
     const categoriesWithCount = await Promise.all(
       categories.map(async (cat) => {
-        const countQuery = { category_id: cat._id, status: 'active' };
-        if (!req.hasRestrictedAccess) {
-          countQuery.visibility = 'public';
-        }
-        const productCount = await Product.countDocuments(countQuery);
+        const productCount = await Product.countDocuments({
+          category_id: cat._id,
+          status: 'active',
+        });
         return {
           ...cat,
           productCount,

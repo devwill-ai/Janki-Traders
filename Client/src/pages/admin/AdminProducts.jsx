@@ -13,6 +13,7 @@ import {
   X,
   Upload,
   Image as ImageIcon,
+  CheckCircle2,
 } from 'lucide-react';
 
 export const AdminProducts = () => {
@@ -38,8 +39,8 @@ export const AdminProducts = () => {
     visibility: 'public',
     featured: false,
     status: 'active',
-    images: '',
   });
+  const [existingImages, setExistingImages] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -61,7 +62,7 @@ export const AdminProducts = () => {
       if (prodsRes.success) setProducts(prodsRes.data);
       if (catsRes.success) setCategories(catsRes.data);
     } catch (err) {
-      console.warn('Error loading products:', err.message);
+      console.warn('Error loading products/categories:', err.message);
     } finally {
       setLoading(false);
     }
@@ -86,8 +87,8 @@ export const AdminProducts = () => {
       visibility: 'public',
       featured: false,
       status: 'active',
-      images: '',
     });
+    setExistingImages([]);
     setSelectedFiles([]);
     setIsModalOpen(true);
   };
@@ -102,14 +103,25 @@ export const AdminProducts = () => {
       visibility: prod.visibility,
       featured: prod.featured,
       status: prod.status,
-      images: Array.isArray(prod.images) ? prod.images.join(', ') : '',
     });
+    setExistingImages(Array.isArray(prod.images) ? prod.images : []);
     setSelectedFiles([]);
     setIsModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!editingProduct && (!selectedFiles || selectedFiles.length === 0)) {
+      alert('Please select at least one door image from your system.');
+      return;
+    }
+
+    if (editingProduct && existingImages.length === 0 && (!selectedFiles || selectedFiles.length === 0)) {
+      alert('Please keep at least one existing image or select a new image from your system.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -121,7 +133,7 @@ export const AdminProducts = () => {
       data.append('visibility', formData.visibility);
       data.append('featured', formData.featured);
       data.append('status', formData.status);
-      data.append('images', formData.images);
+      data.append('existingImages', JSON.stringify(existingImages));
 
       if (selectedFiles && selectedFiles.length > 0) {
         for (let i = 0; i < selectedFiles.length; i++) {
@@ -465,24 +477,93 @@ export const AdminProducts = () => {
                 </div>
               </div>
 
-              {/* Image upload & URLs */}
-              <div className="space-y-2">
-                <label className="font-semibold uppercase tracking-wider text-stone-700">Door Images (File Upload or Image URLs)</label>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={(e) => setSelectedFiles(e.target.files)}
-                  className="w-full text-xs text-stone-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#1A1A1A] file:text-white hover:file:bg-[#8C6D46] cursor-pointer"
-                />
+              {/* Direct Image Upload from System */}
+              <div className="space-y-3">
+                <label className="font-semibold uppercase tracking-wider text-stone-700 block">
+                  Door Images (Upload directly from system)
+                </label>
 
-                <input
-                  type="text"
-                  value={formData.images}
-                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  placeholder="Or paste external image URLs (comma separated)..."
-                  className="w-full px-3 py-1.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
-                />
+                {/* Existing Images preview when editing */}
+                {existingImages.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] text-stone-500 font-medium">Current Images:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {existingImages.map((img, idx) => (
+                        <div key={idx} className="relative group w-16 h-16 rounded-md overflow-hidden border border-[#E8E2D5] bg-[#F2EFE9]">
+                          <img
+                            src={getImageUrl(img)}
+                            alt={`Door ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setExistingImages(existingImages.filter((_, i) => i !== idx))}
+                            className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-[10px] cursor-pointer shadow-xs"
+                            title="Remove image"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* File input */}
+                <div className="border-2 border-dashed border-[#E8E2D5] hover:border-[#8C6D46] rounded-lg p-4 bg-[#FAF9F5] transition-colors text-center">
+                  <input
+                    type="file"
+                    id="door-images-upload"
+                    multiple
+                    accept="image/jpeg,image/png,image/webp,image/jpg,image/avif"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      setSelectedFiles((prev) => [...prev, ...files]);
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="door-images-upload"
+                    className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                  >
+                    <Upload size={22} className="text-[#8C6D46]" />
+                    <span className="text-xs font-semibold text-[#1A1A1A]">
+                      Click to choose images from system
+                    </span>
+                    <span className="text-[10px] text-stone-500">
+                      Supports JPG, PNG, WEBP, AVIF (Max 5MB each, up to 6 images)
+                    </span>
+                  </label>
+                </div>
+
+                {/* Preview of newly selected files */}
+                {selectedFiles.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+                      <CheckCircle2 size={13} />
+                      {selectedFiles.length} new image{selectedFiles.length > 1 ? 's' : ''} selected:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedFiles.map((file, idx) => (
+                        <div key={idx} className="relative w-16 h-16 rounded-md overflow-hidden border border-emerald-300 bg-emerald-50">
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={file.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== idx))}
+                            className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] cursor-pointer"
+                            title="Remove file"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-3 pt-3 border-t border-[#E8E2D5]">

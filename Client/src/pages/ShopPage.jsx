@@ -179,38 +179,37 @@ export const ShopPage = () => {
             )}
           </div>
 
-          {/* Visibility Switch (if active access) */}
-          {hasRestrictedAccess && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-stone-500 font-medium">Visibility:</span>
-              <div className="inline-flex bg-white p-1 rounded-lg border border-[#E8E2D5] text-xs">
-                <button
-                  onClick={() => setVisibilityFilter('all')}
-                  className={`px-3 py-1 rounded-md transition-colors ${
-                    visibilityFilter === 'all' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862]'
-                  }`}
-                >
-                  All Doors
-                </button>
-                <button
-                  onClick={() => setVisibilityFilter('public')}
-                  className={`px-3 py-1 rounded-md transition-colors ${
-                    visibilityFilter === 'public' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862]'
-                  }`}
-                >
-                  Public Only
-                </button>
-                <button
-                  onClick={() => setVisibilityFilter('restricted')}
-                  className={`px-3 py-1 rounded-md transition-colors ${
-                    visibilityFilter === 'restricted' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862]'
-                  }`}
-                >
-                  Restricted Only
-                </button>
-              </div>
+          {/* Visibility Switch */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-stone-500 font-medium">Visibility:</span>
+            <div className="inline-flex bg-white p-1 rounded-lg border border-[#E8E2D5] text-xs shadow-2xs">
+              <button
+                onClick={() => setVisibilityFilter('all')}
+                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                  visibilityFilter === 'all' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
+                }`}
+              >
+                All Doors
+              </button>
+              <button
+                onClick={() => setVisibilityFilter('public')}
+                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                  visibilityFilter === 'public' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
+                }`}
+              >
+                Public Only
+              </button>
+              <button
+                onClick={() => setVisibilityFilter('restricted')}
+                className={`px-3 py-1 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                  visibilityFilter === 'restricted' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
+                }`}
+              >
+                <Lock size={11} className={visibilityFilter === 'restricted' ? 'text-[#C5A880]' : 'text-stone-400'} />
+                <span>Restricted Only</span>
+              </button>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Category Filter Chips */}

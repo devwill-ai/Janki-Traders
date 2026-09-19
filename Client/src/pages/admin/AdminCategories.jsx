@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, getImageUrl } from '../../services/api';
-import { Layers, Plus, Edit2, Trash2, RefreshCw, X, Image as ImageIcon } from 'lucide-react';
+import { Layers, Plus, Edit2, Trash2, RefreshCw, X, Image as ImageIcon, Upload, CheckCircle2 } from 'lucide-react';
 
 export const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -10,10 +10,10 @@ export const AdminCategories = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    image: '',
     status: 'active',
     order: 0,
   });
+  const [existingImage, setExistingImage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -40,10 +40,10 @@ export const AdminCategories = () => {
     setFormData({
       name: '',
       description: '',
-      image: '',
       status: 'active',
       order: categories.length + 1,
     });
+    setExistingImage('');
     setSelectedFile(null);
     setIsModalOpen(true);
   };
@@ -53,16 +53,22 @@ export const AdminCategories = () => {
     setFormData({
       name: cat.name,
       description: cat.description || '',
-      image: cat.image || '',
       status: cat.status,
       order: cat.order || 0,
     });
+    setExistingImage(cat.image || '');
     setSelectedFile(null);
     setIsModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!editingCategory && !selectedFile) {
+      alert('Please select a cover image from your system.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -71,7 +77,6 @@ export const AdminCategories = () => {
       data.append('description', formData.description);
       data.append('status', formData.status);
       data.append('order', formData.order);
-      data.append('image', formData.image);
 
       if (selectedFile) {
         data.append('image', selectedFile);
@@ -283,21 +288,78 @@ export const AdminCategories = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="font-semibold uppercase tracking-wider text-stone-700">Cover Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setSelectedFile(e.target.files[0])}
-                  className="w-full text-xs text-stone-500 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-[#1A1A1A] file:text-white hover:file:bg-[#8C6D46] cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="Or paste external image URL..."
-                  className="w-full px-3 py-1.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A]"
-                />
+              {/* Cover Image (Direct System Upload) */}
+              <div className="space-y-3">
+                <label className="font-semibold uppercase tracking-wider text-stone-700 block">
+                  Cover Image (Upload directly from system) {!editingCategory && '*'}
+                </label>
+
+                {/* Current Image preview when editing */}
+                {existingImage && !selectedFile && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] text-stone-500 font-medium">Current Cover Image:</span>
+                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-[#E8E2D5] bg-[#F2EFE9] shadow-xs">
+                      <img
+                        src={getImageUrl(existingImage)}
+                        alt="Current Cover"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* System File Input */}
+                <div className="border-2 border-dashed border-[#E8E2D5] hover:border-[#8C6D46] rounded-lg p-4 bg-[#FAF9F5] transition-colors text-center">
+                  <input
+                    type="file"
+                    id="category-image-upload"
+                    accept="image/jpeg,image/png,image/webp,image/jpg,image/avif"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        setSelectedFile(e.target.files[0]);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="category-image-upload"
+                    className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                  >
+                    <Upload size={22} className="text-[#8C6D46]" />
+                    <span className="text-xs font-semibold text-[#1A1A1A]">
+                      {selectedFile ? 'Change image from system' : 'Click to choose cover image from system'}
+                    </span>
+                    <span className="text-[10px] text-stone-500">
+                      Supports JPG, PNG, WEBP, AVIF (Max 5MB)
+                    </span>
+                  </label>
+                </div>
+
+                {/* Selected File Preview */}
+                {selectedFile && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+                      <CheckCircle2 size={13} />
+                      Selected from system:
+                    </span>
+                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-emerald-300 bg-emerald-50 shadow-xs">
+                      <img
+                        src={URL.createObjectURL(selectedFile)}
+                        alt={selectedFile.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setSelectedFile(null)}
+                        className="absolute top-1 right-1 w-5 h-5 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] cursor-pointer"
+                        title="Remove file"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-stone-600 truncate max-w-xs">{selectedFile.name}</p>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-3 pt-3 border-t border-[#E8E2D5]">
