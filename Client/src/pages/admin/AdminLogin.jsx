@@ -35,29 +35,29 @@ export const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl border border-[#E8E2D5] shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-[#FAF9F5] flex items-center justify-center p-3 sm:p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl border border-[#E8E2D5] shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-[#1A1A1A] text-white p-8 text-center space-y-3">
+        <div className="bg-[#1A1A1A] text-white p-6 sm:p-8 text-center space-y-3">
           <img
             src="/logo-crest.webp"
             alt="Janki Traders Crest Logo"
-            className="w-16 h-16 object-contain mx-auto drop-shadow-md"
+            className="w-14 sm:w-16 h-14 sm:h-16 object-contain mx-auto drop-shadow-md"
           />
           <div>
-            <h2 className="font-serif text-2xl font-semibold tracking-wide text-white">
+            <h2 className="font-serif text-[clamp(1.25rem,4vw,1.6rem)] font-semibold tracking-wide text-white">
               Janki Traders Admin
             </h2>
-            <p className="text-xs text-[#C5A880] tracking-wider uppercase font-sans mt-0.5">
+            <p className="text-[clamp(0.6875rem,2vw,0.75rem)] text-[#C5A880] tracking-wider uppercase font-sans mt-0.5">
               Digital Catalogue Control Desk
             </p>
           </div>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
+        <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-4 sm:space-y-5">
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 text-xs rounded-md border border-red-200 flex items-center gap-2">
+            <div className="p-3 bg-red-50 text-red-700 text-xs rounded-lg border border-red-200 flex items-center gap-2">
               <AlertCircle size={15} className="shrink-0" />
               <span>{error}</span>
             </div>
@@ -75,7 +75,7 @@ export const AdminLogin = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@jankitraders.com"
-                className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
               />
             </div>
           </div>
@@ -92,7 +92,7 @@ export const AdminLogin = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
               />
             </div>
           </div>
@@ -101,14 +101,14 @@ export const AdminLogin = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wider uppercase transition-colors flex items-center justify-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+              className="w-full py-3 rounded-lg bg-[#1A1A1A] hover:bg-[#8C6D46] active:scale-[0.99] text-white text-xs font-semibold tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In to Admin Panel'}</span>
               <ArrowRight size={14} />
             </button>
           </div>
 
-          <div className="pt-4 border-t border-[#E8E2D5] text-center">
+          <div className="pt-3 border-t border-[#E8E2D5] text-center">
             <Link
               to="/"
               className="text-xs text-stone-500 hover:text-[#8C6D46] transition-colors"

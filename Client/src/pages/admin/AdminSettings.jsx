@@ -124,22 +124,22 @@ export const AdminSettings = () => {
   };
 
   return (
-    <div className="p-6 md:p-10 space-y-8 max-w-5xl">
+    <div className="p-4 sm:p-6 md:p-10 space-y-6 sm:space-y-8 max-w-5xl">
       {/* Header */}
       <div>
-        <h1 className="font-serif text-3xl font-semibold text-[#1A1A1A]">
+        <h1 className="font-serif text-[clamp(1.35rem,4.5vw,1.875rem)] font-semibold text-[#1A1A1A] leading-tight">
           Store & System Settings
         </h1>
-        <p className="text-xs text-[#6B6862] mt-0.5">
+        <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
           Configure default access duration, store contacts, WhatsApp channels, and admin credentials per Section 16.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
         {/* Left Column: Store Configuration */}
-        <div className="lg:col-span-8 bg-white rounded-xl border border-[#E8E2D5] p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="lg:col-span-8 bg-white rounded-xl border border-[#E8E2D5] p-4 sm:p-6 md:p-8 shadow-xs space-y-5 sm:space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5]">
-            <h3 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+            <h3 className="font-serif text-[clamp(1.05rem,3.2vw,1.25rem)] font-semibold text-[#1A1A1A]">
               Catalogue & Contact Parameters
             </h3>
             <span className="text-[10px] uppercase font-mono text-[#8C6D46] bg-[#FAF9F5] px-2 py-0.5 rounded border border-[#E8E2D5]">
@@ -149,7 +149,7 @@ export const AdminSettings = () => {
 
           {settingsFeedback && (
             <div
-              className={`p-3 rounded-md text-xs flex items-center gap-2 ${
+              className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
                 settingsFeedback.type === 'success'
                   ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                   : 'bg-red-50 text-red-800 border border-red-200'
@@ -161,14 +161,14 @@ export const AdminSettings = () => {
           )}
 
           <form onSubmit={handleSettingsSubmit} className="space-y-4 text-xs">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Company Name</label>
                 <input
                   type="text"
                   value={settings.company_name}
                   onChange={(e) => setSettings({ ...settings, company_name: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -183,13 +183,13 @@ export const AdminSettings = () => {
                   max={90}
                   value={settings.default_access_duration_days}
                   onChange={(e) => setSettings({ ...settings, default_access_duration_days: Number(e.target.value) })}
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
                 <span className="text-[10px] text-stone-500">Specified default: 7 days.</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">WhatsApp Number</label>
                 <div className="relative">
@@ -199,7 +199,7 @@ export const AdminSettings = () => {
                     value={settings.whatsapp_number}
                     onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
                     placeholder="+919876543210"
-                    className="w-full pl-8 pr-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                    className="w-full pl-8 pr-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                   />
                 </div>
               </div>
@@ -213,7 +213,7 @@ export const AdminSettings = () => {
                     value={settings.contact_number}
                     onChange={(e) => setSettings({ ...settings, contact_number: e.target.value })}
                     placeholder="+919876543210"
-                    className="w-full pl-8 pr-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                    className="w-full pl-8 pr-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                   />
                 </div>
               </div>
@@ -225,18 +225,18 @@ export const AdminSettings = () => {
                 rows={2}
                 value={settings.address}
                 onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-                className="w-full p-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                className="w-full p-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Business Hours</label>
                 <input
                   type="text"
                   value={settings.business_hours}
                   onChange={(e) => setSettings({ ...settings, business_hours: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -246,7 +246,7 @@ export const AdminSettings = () => {
                   type="email"
                   value={settings.email}
                   onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export const AdminSettings = () => {
               <button
                 type="submit"
                 disabled={savingSettings}
-                className="px-6 py-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white font-semibold flex items-center gap-2 transition-colors cursor-pointer shadow-xs"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#1A1A1A] hover:bg-[#8C6D46] text-white font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs active:scale-95"
               >
                 <Save size={14} />
                 <span>{savingSettings ? 'Saving Settings...' : 'Save Store Settings'}</span>
@@ -265,28 +265,28 @@ export const AdminSettings = () => {
         </div>
 
         {/* Right Column: Admin Profile & Change Password (Section 16) */}
-        <div className="lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-5 sm:space-y-6">
           {/* Admin Profile Box */}
-          <div className="bg-white rounded-xl border border-[#E8E2D5] p-6 shadow-xs space-y-3">
-            <h3 className="font-serif text-lg font-semibold text-[#1A1A1A]">
+          <div className="bg-white rounded-xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs space-y-3">
+            <h3 className="font-serif text-[clamp(1.05rem,3.2vw,1.25rem)] font-semibold text-[#1A1A1A]">
               Admin Account
             </h3>
-            <div className="p-3 rounded bg-[#FAF9F5] border border-[#E8E2D5] text-xs space-y-1.5 text-stone-600">
+            <div className="p-3.5 rounded-xl bg-[#FAF9F5] border border-[#E8E2D5] text-xs space-y-2 text-stone-600">
               <p><strong className="text-[#1A1A1A]">Name:</strong> {adminUser?.name || 'Janki Traders Admin'}</p>
-              <p><strong className="text-[#1A1A1A]">Email:</strong> {adminUser?.email || 'admin@jankitraders.com'}</p>
+              <p className="truncate"><strong className="text-[#1A1A1A]">Email:</strong> {adminUser?.email || 'admin@jankitraders.com'}</p>
               <p><strong className="text-[#1A1A1A]">Role:</strong> <span className="uppercase text-[#8C6D46] font-semibold">{adminUser?.role || 'superadmin'}</span></p>
             </div>
           </div>
 
           {/* Change Password Form */}
-          <div className="bg-white rounded-xl border border-[#E8E2D5] p-6 shadow-xs space-y-4">
-            <h3 className="font-serif text-lg font-semibold text-[#1A1A1A]">
+          <div className="bg-white rounded-xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs space-y-4">
+            <h3 className="font-serif text-[clamp(1.05rem,3.2vw,1.25rem)] font-semibold text-[#1A1A1A]">
               Change Password
             </h3>
 
             {passwordFeedback && (
               <div
-                className={`p-3 rounded-md text-xs flex items-center gap-2 ${
+                className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
                   passwordFeedback.type === 'success'
                     ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                     : 'bg-red-50 text-red-800 border border-red-200'
@@ -306,7 +306,7 @@ export const AdminSettings = () => {
                   value={passwordData.currentPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -318,7 +318,7 @@ export const AdminSettings = () => {
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -330,7 +330,7 @@ export const AdminSettings = () => {
                   value={passwordData.confirmPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -338,7 +338,7 @@ export const AdminSettings = () => {
                 <button
                   type="submit"
                   disabled={changingPassword}
-                  className="w-full py-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  className="w-full py-2.5 rounded-lg bg-[#1A1A1A] hover:bg-[#8C6D46] text-white font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer active:scale-95"
                 >
                   <Key size={14} />
                   <span>{changingPassword ? 'Updating...' : 'Update Password'}</span>

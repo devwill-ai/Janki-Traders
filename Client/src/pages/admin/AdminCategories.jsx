@@ -1,10 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { api, getImageUrl } from '../../services/api';
+import { ConfirmModal } from '../../components/ConfirmModal';
 import { Layers, Plus, Edit2, Trash2, RefreshCw, X, Image as ImageIcon, Upload, CheckCircle2 } from 'lucide-react';
 
 export const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Inbuilt Confirm / Alert Dialog State
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'danger',
+    confirmText: 'Confirm',
+    cancelText: 'Cancel',
+    onConfirm: () => {},
+    onCancel: () => setConfirmDialog((prev) => ({ ...prev, isOpen: false })),
+  });
+
+  const showInbuiltAlert = (title, message, type = 'warning') => {
+    setConfirmDialog({
+      isOpen: true,
+      title,
+      message,
+      type,
+      confirmText: 'OK',
+      cancelText: null,
+      onConfirm: () => setConfirmDialog((prev) => ({ ...prev, isOpen: false })),
+    });
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [formData, setFormData] = useState({
@@ -65,7 +91,7 @@ export const AdminCategories = () => {
     e.preventDefault();
 
     if (!editingCategory && !selectedFile) {
-      alert('Please select a cover image from your system.');
+      showInbuiltAlert('Missing Cover Image', 'Please select a cover image from your system.', 'warning');
       return;
     }
 
@@ -91,52 +117,65 @@ export const AdminCategories = () => {
       setIsModalOpen(false);
       await fetchCategories();
     } catch (err) {
-      alert(err.message || 'Failed to save category.');
+      showInbuiltAlert('Save Error', err.message || 'Failed to save category.', 'danger');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (cat) => {
+  const handleDelete = (cat) => {
     if (cat.totalProducts > 0) {
-      alert(`Cannot delete category "${cat.name}". It still has ${cat.totalProducts} doors assigned to it.`);
+      showInbuiltAlert(
+        'Cannot Delete Category',
+        `Cannot delete category "${cat.name}". It still has ${cat.totalProducts} doors assigned to it. Please reassign or delete the doors first.`,
+        'warning'
+      );
       return;
     }
 
-    if (!window.confirm(`Delete category "${cat.name}"?`)) return;
-
-    try {
-      await api.deleteCategory(cat._id);
-      await fetchCategories();
-    } catch (err) {
-      alert(err.message || 'Failed to delete category.');
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Category',
+      message: `Are you sure you want to delete category "${cat.name}"? This action cannot be undone.`,
+      type: 'danger',
+      confirmText: 'Delete Category',
+      cancelText: 'Cancel',
+      onConfirm: async () => {
+        setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
+        try {
+          await api.deleteCategory(cat._id);
+          await fetchCategories();
+        } catch (err) {
+          showInbuiltAlert('Delete Error', err.message || 'Failed to delete category.', 'danger');
+        }
+      },
+    });
   };
 
   return (
-    <div className="p-6 md:p-10 space-y-6">
+    <div className="p-4 sm:p-6 md:p-10 space-y-5 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="font-serif text-3xl font-semibold text-[#1A1A1A]">
+          <h1 className="font-serif text-[clamp(1.35rem,4.5vw,1.875rem)] font-semibold text-[#1A1A1A] leading-tight">
             Category Management
           </h1>
-          <p className="text-xs text-[#6B6862] mt-0.5">
+          <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
             Organize door types (Waterproof Doors, Glass Doors, Wooden Doors) per Section 14.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             onClick={fetchCategories}
-            className="px-3.5 py-2 rounded-md bg-white border border-[#E8E2D5] text-[#1A1A1A] hover:border-[#8C6D46] text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-lg bg-white border border-[#E8E2D5] text-[#1A1A1A] hover:border-[#8C6D46] text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95 transition-all"
           >
             <RefreshCw size={13} />
             <span>Refresh</span>
           </button>
           <button
             onClick={handleOpenAddModal}
-            className="px-4 py-2 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wide uppercase flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
+            className="flex-2 sm:flex-initial px-4 py-2 rounded-lg bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-xs font-semibold tracking-wide uppercase flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer active:scale-95"
           >
             <Plus size={15} />
             <span>Add Category</span>
@@ -146,7 +185,7 @@ export const AdminCategories = () => {
 
       {/* Categories Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {[1, 2, 3].map((n) => (
             <div key={n} className="h-44 bg-white rounded-xl border border-[#E8E2D5] animate-pulse" />
           ))}
@@ -156,7 +195,7 @@ export const AdminCategories = () => {
           No categories found. Click "Add Category" to begin.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {categories.map((cat) => {
             const img = getImageUrl(cat.image);
 
@@ -165,12 +204,12 @@ export const AdminCategories = () => {
                 key={cat._id}
                 className="bg-white rounded-xl border border-[#E8E2D5] overflow-hidden shadow-xs hover:border-[#8C6D46] transition-all flex flex-col justify-between"
               >
-                <div className="relative h-36 bg-[#F2EFE9] overflow-hidden">
+                <div className="relative h-32 sm:h-36 bg-[#F2EFE9] overflow-hidden">
                   <img src={img} alt={cat.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
                   <div className="absolute bottom-3 left-4 right-4 text-white">
-                    <h3 className="font-serif text-xl font-semibold">{cat.name}</h3>
-                    <span className="text-[10px] text-[#C5A880] uppercase tracking-wider font-mono">
+                    <h3 className="font-serif text-[clamp(1.15rem,3.2vw,1.35rem)] font-semibold leading-tight">{cat.name}</h3>
+                    <span className="text-[10px] text-[#C5A880] uppercase tracking-wider font-mono block mt-0.5">
                       Slug: {cat.slug}
                     </span>
                   </div>
@@ -182,17 +221,17 @@ export const AdminCategories = () => {
                   </p>
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-[#F2EFE9]">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-[#1A1A1A]">
                         {cat.totalProducts || 0} Doors Total
                       </span>
                       <span className="text-[11px] text-stone-500">
-                        ({cat.publicProducts || 0} Public / {cat.restrictedProducts || 0} Restr.)
+                        ({cat.publicProducts || 0} Pub / {cat.restrictedProducts || 0} Restr.)
                       </span>
                     </div>
 
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase shrink-0 ${
                         cat.status === 'active'
                           ? 'bg-emerald-50 text-emerald-700'
                           : 'bg-stone-100 text-stone-600'
@@ -202,17 +241,17 @@ export const AdminCategories = () => {
                     </span>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-end gap-2">
+                  <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#F2EFE9]">
                     <button
                       onClick={() => handleOpenEditModal(cat)}
-                      className="px-3 py-1.5 rounded-md hover:bg-stone-100 text-stone-700 font-semibold text-xs flex items-center gap-1"
+                      className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] hover:bg-stone-100 text-stone-700 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 cursor-pointer"
                     >
                       <Edit2 size={13} />
                       <span>Edit</span>
                     </button>
                     <button
                       onClick={() => handleDelete(cat)}
-                      className="px-3 py-1.5 rounded-md hover:bg-rose-50 text-stone-400 hover:text-rose-600 font-semibold text-xs flex items-center gap-1"
+                      className="px-3 py-1.5 rounded-lg bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-600 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 cursor-pointer"
                     >
                       <Trash2 size={13} />
                       <span>Delete</span>
@@ -225,17 +264,17 @@ export const AdminCategories = () => {
         </div>
       )}
 
-      {/* Add / Edit Category Modal */}
+      {/* Add / Edit Category Modal (Responsive Sheet on Mobile, Dialog on Desktop) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-xl border border-[#E8E2D5] max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5]">
-              <h3 className="font-serif text-2xl font-semibold text-[#1A1A1A]">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-xs animate-fadeIn overflow-y-auto">
+          <div className="bg-white rounded-t-2xl sm:rounded-xl border border-[#E8E2D5] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl safe-pb max-h-[92dvh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5] sticky top-0 bg-white z-10">
+              <h3 className="font-serif text-[clamp(1.15rem,3.5vw,1.4rem)] font-semibold text-[#1A1A1A]">
                 {editingCategory ? 'Edit Door Category' : 'Add Door Category'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-stone-400 hover:text-[#1A1A1A]"
+                className="p-1 rounded-full text-stone-400 hover:text-[#1A1A1A] hover:bg-[#FAF9F5] cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -250,7 +289,7 @@ export const AdminCategories = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Waterproof Doors"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -260,8 +299,8 @@ export const AdminCategories = () => {
                   rows={2}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Brief summary of doors in this category..."
-                  className="w-full p-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  placeholder="Brief description of the door category..."
+                  className="w-full p-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
 
@@ -271,16 +310,17 @@ export const AdminCategories = () => {
                   <input
                     type="number"
                     value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A]"
+                    onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                    className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                   />
                 </div>
+
                 <div className="space-y-1">
                   <label className="font-semibold uppercase tracking-wider text-stone-700">Status</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-md text-xs text-[#1A1A1A]"
+                    className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                   >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -288,34 +328,45 @@ export const AdminCategories = () => {
                 </div>
               </div>
 
-              {/* Cover Image (Direct System Upload) */}
-              <div className="space-y-3">
+              {/* Cover Image Upload */}
+              <div className="space-y-2">
                 <label className="font-semibold uppercase tracking-wider text-stone-700 block">
-                  Cover Image (Upload directly from system) {!editingCategory && '*'}
+                  Category Cover Image *
                 </label>
 
-                {/* Current Image preview when editing */}
                 {existingImage && !selectedFile && (
-                  <div className="space-y-1.5">
-                    <span className="text-[11px] text-stone-500 font-medium">Current Cover Image:</span>
-                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-[#E8E2D5] bg-[#F2EFE9] shadow-xs">
-                      <img
-                        src={getImageUrl(existingImage)}
-                        alt="Current Cover"
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="relative w-full h-28 rounded-lg overflow-hidden border border-[#E8E2D5] bg-[#F2EFE9]">
+                    <img
+                      src={getImageUrl(existingImage)}
+                      alt="Current cover"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/60 text-white text-[10px]">
+                      Current Cover
                     </div>
                   </div>
                 )}
 
-                {/* System File Input */}
-                <div className="border-2 border-dashed border-[#E8E2D5] hover:border-[#8C6D46] rounded-lg p-4 bg-[#FAF9F5] transition-colors text-center">
+                {selectedFile && (
+                  <div className="relative w-full h-28 rounded-lg overflow-hidden border border-emerald-300 bg-emerald-50">
+                    <img
+                      src={URL.createObjectURL(selectedFile)}
+                      alt="New preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-emerald-700 text-white text-[10px] flex items-center gap-1">
+                      <CheckCircle2 size={11} /> New Selection
+                    </div>
+                  </div>
+                )}
+
+                <div className="border-2 border-dashed border-[#E8E2D5] hover:border-[#8C6D46] rounded-xl p-3.5 bg-[#FAF9F5] transition-colors text-center">
                   <input
                     type="file"
                     id="category-image-upload"
                     accept="image/jpeg,image/png,image/webp,image/jpg,image/avif"
                     onChange={(e) => {
-                      if (e.target.files?.[0]) {
+                      if (e.target.files && e.target.files[0]) {
                         setSelectedFile(e.target.files[0]);
                       }
                     }}
@@ -323,43 +374,17 @@ export const AdminCategories = () => {
                   />
                   <label
                     htmlFor="category-image-upload"
-                    className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
+                    className="cursor-pointer flex flex-col items-center justify-center gap-1 py-1"
                   >
-                    <Upload size={22} className="text-[#8C6D46]" />
+                    <Upload size={20} className="text-[#8C6D46]" />
                     <span className="text-xs font-semibold text-[#1A1A1A]">
-                      {selectedFile ? 'Change image from system' : 'Click to choose cover image from system'}
+                      Tap to choose category cover image
                     </span>
                     <span className="text-[10px] text-stone-500">
-                      Supports JPG, PNG, WEBP, AVIF (Max 5MB)
+                      Recommended: 800x600 JPG, PNG, or WEBP
                     </span>
                   </label>
                 </div>
-
-                {/* Selected File Preview */}
-                {selectedFile && (
-                  <div className="space-y-1.5">
-                    <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
-                      <CheckCircle2 size={13} />
-                      Selected from system:
-                    </span>
-                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-emerald-300 bg-emerald-50 shadow-xs">
-                      <img
-                        src={URL.createObjectURL(selectedFile)}
-                        alt={selectedFile.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setSelectedFile(null)}
-                        className="absolute top-1 right-1 w-5 h-5 bg-black/70 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] cursor-pointer"
-                        title="Remove file"
-                      >
-                        ×
-                      </button>
-                    </div>
-                    <p className="text-[11px] text-stone-600 truncate max-w-xs">{selectedFile.name}</p>
-                  </div>
-                )}
               </div>
 
               <div className="flex items-center gap-3 pt-3 border-t border-[#E8E2D5]">
@@ -382,6 +407,15 @@ export const AdminCategories = () => {
           </div>
         </div>
       )}
+
+      {/* Inbuilt Confirm / Alert Dialog */}
+      <ConfirmModal
+        {...confirmDialog}
+        onCancel={() => {
+          if (confirmDialog.onCancel) confirmDialog.onCancel();
+          setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
+        }}
+      />
     </div>
   );
 };

@@ -49,6 +49,45 @@
   -webkit-backdrop-filter: blur(8px);
 }
 
+/* Fluid clamp typography utilities for admin & storefront */
+.font-fluid-h1 {
+  font-size: clamp(1.35rem, 4.2vw, 1.875rem);
+  line-height: 1.25;
+}
+
+.font-fluid-h2 {
+  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+  line-height: 1.3;
+}
+
+.font-fluid-kpi {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.font-fluid-body {
+  font-size: clamp(0.75rem, 2.2vw, 0.8125rem);
+  line-height: 1.4;
+}
+
+.font-fluid-sub {
+  font-size: clamp(0.6875rem, 2vw, 0.75rem);
+}
+
+/* Hide scrollbar for horizontal chip bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area padding for mobile notches and bottom gesture bars */
+.safe-pb {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
 /* Luxury card hover subtle glow */
 .luxury-card {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
