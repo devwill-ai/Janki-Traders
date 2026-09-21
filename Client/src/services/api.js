@@ -17,12 +17,8 @@ export async function apiRequest(endpoint, options = {}) {
 
   // Attach customer token if present
   const customerToken = localStorage.getItem('jt_customer_token');
-  const customerMobile = localStorage.getItem('jt_customer_mobile');
   if (customerToken) {
     headers['x-customer-token'] = customerToken;
-  }
-  if (customerMobile) {
-    headers['x-customer-mobile'] = customerMobile;
   }
 
   // Attach admin token if present

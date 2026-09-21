@@ -7,6 +7,9 @@ import { EnquiryModal } from '../components/EnquiryModal';
 import heroSlide1 from '../assets/hero-slide-1.webp';
 import heroSlide2 from '../assets/hero-slide-2.webp';
 import heroSlide3 from '../assets/hero-slide-3.webp';
+import heroSlideMobile1 from '../assets/hero-slide-mobile-1.webp';
+import heroSlideMobile2 from '../assets/hero-slide-mobile-2.webp';
+import heroSlideMobile3 from '../assets/hero-slide-mobile-3.webp';
 import {
   ArrowRight,
   ShieldCheck,
@@ -24,7 +27,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-const originalHeroSlides = [heroSlide1, heroSlide2, heroSlide3];
+const originalHeroSlides = [
+  { desktop: heroSlide1, mobile: heroSlideMobile1 },
+  { desktop: heroSlide2, mobile: heroSlideMobile2 },
+  { desktop: heroSlide3, mobile: heroSlideMobile3 },
+];
 // Cloned first and last slides to achieve infinite continuous sliding loop
 const carouselSlides = [
   originalHeroSlides[originalHeroSlides.length - 1],
@@ -250,13 +257,16 @@ export const HomePage = () => {
             }}
             onTransitionEnd={handleTransitionEnd}
           >
-            {carouselSlides.map((imgSrc, idx) => (
+            {carouselSlides.map((slide, idx) => (
               <div key={idx} className="relative h-full w-full min-w-full shrink-0">
-                <img
-                  src={imgSrc}
-                  alt={`Janki Traders Architectural Door Showcase ${idx}`}
-                  className="h-full w-full object-cover object-center"
-                />
+                <picture className="block h-full w-full">
+                  <source media="(max-width: 767px)" srcSet={slide.mobile} type="image/webp" />
+                  <img
+                    src={slide.desktop}
+                    alt={`Janki Traders Architectural Door Showcase ${idx}`}
+                    className="h-full w-full object-cover object-center"
+                  />
+                </picture>
               </div>
             ))}
           </div>

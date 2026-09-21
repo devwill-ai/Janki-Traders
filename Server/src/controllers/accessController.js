@@ -193,7 +193,7 @@ export const getAccessStatus = async (req, res, next) => {
           success: true,
           status: 'active',
           hasAccess: true,
-          customer: { name: customer.name, mobile: customer.mobile, token: customer.access_token },
+          customer: { name: customer.name, mobile: customer.mobile },
           request: {
             id: latestRequest._id,
             requested_at: latestRequest.requested_at,
@@ -214,7 +214,7 @@ export const getAccessStatus = async (req, res, next) => {
           success: true,
           status: 'expired',
           hasAccess: false,
-          customer: { name: customer.name, mobile: customer.mobile, token: customer.access_token },
+          customer: { name: customer.name, mobile: customer.mobile },
           request: {
             id: latestRequest._id,
             requested_at: latestRequest.requested_at,
@@ -229,7 +229,7 @@ export const getAccessStatus = async (req, res, next) => {
       success: true,
       status: latestRequest.status,
       hasAccess: false,
-      customer: { name: customer.name, mobile: customer.mobile, token: customer.access_token },
+      customer: { name: customer.name, mobile: customer.mobile },
       request: {
         id: latestRequest._id,
         requested_at: latestRequest.requested_at,

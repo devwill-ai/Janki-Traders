@@ -138,17 +138,15 @@ export const createEnquiry = async (req, res, next) => {
 export const getMyEnquiries = async (req, res, next) => {
   try {
     const customerToken = req.headers['x-customer-token'] || req.query.token;
-    const mobile = req.query.mobile;
 
-    if (!customerToken && !mobile) {
-      return res.status(400).json({
+    if (!customerToken) {
+      return res.status(401).json({
         success: false,
-        message: 'Please provide your customer token or mobile number.',
+        message: 'Authentication required. Please provide your customer token.',
       });
     }
 
-    const query = customerToken ? { access_token: customerToken } : { mobile: mobile.trim() };
-    const customer = await Customer.findOne(query);
+    const customer = await Customer.findOne({ access_token: customerToken });
 
     if (!customer) {
       return res.json({

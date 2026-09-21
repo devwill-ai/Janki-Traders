@@ -15,7 +15,7 @@ export const verifyAdmin = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'janki_traders_jwt_secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const admin = await Admin.findById(decoded.id).select('-password');
     if (!admin) {
@@ -47,7 +47,7 @@ export const resolveCustomerAccess = async (req, res, next) => {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
       try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'janki_traders_jwt_secret');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.role === 'admin' || decoded.role === 'superadmin') {
           req.hasRestrictedAccess = true;
           req.isAdmin = true;
@@ -58,20 +58,18 @@ export const resolveCustomerAccess = async (req, res, next) => {
       }
     }
 
-    // Extract customer identification
+    // Extract customer identification strictly from token
     const customerToken = req.headers['x-customer-token'] || (authHeader?.startsWith('Customer ') ? authHeader.split(' ')[1] : null);
-    const customerMobile = req.headers['x-customer-mobile'];
 
-    if (!customerToken && !customerMobile) {
+    if (!customerToken) {
       req.hasRestrictedAccess = false;
       req.customer = null;
       req.customerStatus = 'public';
       return next();
     }
 
-    // Find customer by token or mobile
-    const query = customerToken ? { access_token: customerToken } : { mobile: customerMobile };
-    const customer = await Customer.findOne(query);
+    // Strictly find customer by access token
+    const customer = await Customer.findOne({ access_token: customerToken });
 
     if (!customer) {
       req.hasRestrictedAccess = false;

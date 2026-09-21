@@ -8,7 +8,7 @@ import { AccessRequest } from '../models/AccessRequest.js';
 const generateToken = (admin) => {
   return jwt.sign(
     { id: admin._id, email: admin.email, role: admin.role, name: admin.name },
-    process.env.JWT_SECRET || 'janki_traders_jwt_secret',
+    process.env.JWT_SECRET,
     { expiresIn: '30d' }
   );
 };
@@ -111,9 +111,8 @@ export const changeAdminPassword = async (req, res, next) => {
 export const getCustomerSession = async (req, res, next) => {
   try {
     const customerToken = req.headers['x-customer-token'] || req.query.token;
-    const mobile = req.query.mobile;
 
-    if (!customerToken && !mobile) {
+    if (!customerToken) {
       return res.json({
         success: true,
         authenticated: false,
@@ -122,8 +121,7 @@ export const getCustomerSession = async (req, res, next) => {
       });
     }
 
-    const query = customerToken ? { access_token: customerToken } : { mobile: mobile.trim() };
-    const customer = await Customer.findOne(query);
+    const customer = await Customer.findOne({ access_token: customerToken });
 
     if (!customer) {
       return res.json({
@@ -189,7 +187,6 @@ export const getCustomerSession = async (req, res, next) => {
         id: customer._id,
         name: customer.name,
         mobile: customer.mobile,
-        token: customer.access_token,
       },
       status,
       hasRestrictedAccess: hasAccess,

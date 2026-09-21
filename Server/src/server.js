@@ -18,6 +18,18 @@ import settingRoutes from './routes/settingRoutes.js';
 
 dotenv.config();
 
+// Ensure strong JWT_SECRET is configured before starting
+if (
+  !process.env.JWT_SECRET ||
+  process.env.JWT_SECRET === 'janki_traders_jwt_secret' ||
+  process.env.JWT_SECRET.length < 32
+) {
+  console.error(
+    '[FATAL SECURITY ERROR] JWT_SECRET must be explicitly configured in .env with a secure key of at least 32 characters.'
+  );
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
