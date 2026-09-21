@@ -112,61 +112,78 @@ export const ProductCard = ({ product, onInquireClick }) => {
         </div>
 
         {/* Actions bar */}
-        <div className="mt-4 pt-3.5 border-t border-[#F2EFE9] flex items-center justify-between gap-1.5 sm:gap-2">
+        <div className="mt-4 pt-3.5 border-t border-[#F2EFE9] space-y-2">
           {isLocked ? (
             <button
               onClick={openAccessModal}
-              className="w-full py-2 px-3 rounded-md border border-[#8C6D46] text-[#8C6D46] hover:bg-[#8C6D46] hover:text-white text-[clamp(10.5px,2.5vw,12px)] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              className="w-full py-2.5 px-3 rounded-md border border-[#8C6D46] text-[#8C6D46] hover:bg-[#8C6D46] hover:text-white text-[clamp(11px,2.5vw,12px)] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
             >
-              <Lock size={12} />
+              <Lock size={13} />
               <span>Unlock to View Details</span>
             </button>
           ) : (
             <>
-              <Link
-                to={`/shop/${product._id}`}
-                className="flex-1 py-2 px-[clamp(5px,1.8vw,10px)] rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/70 text-[#1A1A1A] text-[clamp(10px,2.4vw,12px)] font-semibold border border-[#E8E2D5] flex items-center justify-center gap-1 transition-colors min-w-0 truncate"
-                title="View Door Details"
-              >
-                <span>Details</span>
-                <ArrowRight size={13} className="text-[#8C6D46] shrink-0" />
-              </Link>
+              {/* Row 1: Primary Actions - Details & Direct Inquiry */}
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  to={`/shop/${product._id}`}
+                  className="py-2 px-2.5 rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/80 text-[#1A1A1A] text-[clamp(11px,2.4vw,12px)] font-semibold border border-[#E8E2D5] flex items-center justify-center gap-1.5 transition-colors min-w-0"
+                  title="View Door Details"
+                >
+                  <span className="truncate">Details</span>
+                  <ArrowRight size={13} className="text-[#8C6D46] shrink-0" />
+                </Link>
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  toggleBulk(product);
-                }}
-                className={`py-2 px-[clamp(6px,2vw,10px)] rounded-md text-[clamp(10px,2.4vw,12px)] font-medium transition-all flex items-center justify-center gap-1 cursor-pointer border shrink-0 ${
-                  inBulk
-                    ? 'bg-[#8C6D46] hover:bg-[#785c39] text-white border-[#8C6D46] shadow-xs'
-                    : 'bg-[#FAF9F5] hover:bg-[#E8E2D5] text-[#4A4742] border-[#E8E2D5]'
-                }`}
-                title={inBulk ? 'Remove from Bulk Enquiry' : 'Add to Bulk Enquiry'}
-              >
-                {inBulk ? <Check size={12} className="stroke-[2.5] shrink-0" /> : <Plus size={12} className="shrink-0" />}
-                <span>{inBulk ? 'Selected' : 'Bulk'}</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => (onInquireClick ? onInquireClick(product) : null)}
+                  className="py-2 px-2.5 rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-[clamp(11px,2.4vw,12px)] font-medium transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-w-0"
+                  title="Send Instant Enquiry"
+                >
+                  <MessageCircle size={13} className="shrink-0" />
+                  <span className="truncate">Inquire</span>
+                </button>
+              </div>
 
-              <button
-                onClick={() => onInquireClick ? onInquireClick(product) : null}
-                className="py-2 px-[clamp(6px,2vw,10px)] rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-[clamp(10px,2.4vw,12px)] font-medium transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer shrink-0"
-                title="Send Instant Enquiry"
-              >
-                <span>Inquire</span>
-              </button>
+              {/* Row 2: Secondary Actions - Bulk Enquiry Toggle & WhatsApp */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleBulk(product);
+                  }}
+                  className={`flex-1 py-2 px-2.5 rounded-md text-[clamp(11px,2.4vw,12px)] font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer border min-w-0 ${
+                    inBulk
+                      ? 'bg-[#8C6D46] hover:bg-[#785c39] text-white border-[#8C6D46] shadow-xs'
+                      : 'bg-[#FAF9F5] hover:bg-[#E8E2D5] text-[#4A4742] border-[#E8E2D5]'
+                  }`}
+                  title={inBulk ? 'Remove from Bulk Enquiry' : 'Add to Bulk Enquiry'}
+                >
+                  {inBulk ? (
+                    <>
+                      <Check size={13} className="stroke-[2.5] shrink-0" />
+                      <span className="truncate">In Bulk List</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={13} className="shrink-0" />
+                      <span className="truncate">Bulk Enquiry</span>
+                    </>
+                  )}
+                </button>
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-md bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors border border-[#25D366]/30 flex items-center justify-center shrink-0"
-                title="Chat on WhatsApp"
-              >
-                <MessageCircle size={15} />
-              </a>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2 px-3 rounded-md bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors border border-[#25D366]/30 flex items-center justify-center shrink-0"
+                  title="Chat on WhatsApp"
+                >
+                  <MessageCircle size={15} />
+                </a>
+              </div>
             </>
           )}
         </div>

@@ -249,7 +249,7 @@ export const ShopPage = () => {
 
         {/* Product Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
               <div key={n} className="h-96 rounded-lg bg-white border border-[#E8E2D5] animate-pulse" />
             ))}
@@ -277,7 +277,7 @@ export const ShopPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-4">
             {displayedProducts.map((product) => (
               <ProductCard
                 key={product._id}
