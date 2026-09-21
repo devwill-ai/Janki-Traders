@@ -210,6 +210,31 @@ export const HomePage = () => {
     jumpToSlide(dotIdx);
   };
 
+  // Mobile swipe gestures
+  const touchStartXRef = useRef(null);
+  const touchStartYRef = useRef(null);
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const diffX = touchStartXRef.current - e.changedTouches[0].clientX;
+    const diffY = touchStartYRef.current - e.changedTouches[0].clientY;
+
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        handleNextSlide();
+      } else {
+        handlePrevSlide();
+      }
+    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+  };
+
   const activeDot = (safeIndex - 1 + originalHeroSlides.length) % originalHeroSlides.length;
 
   useEffect(() => {
@@ -243,6 +268,8 @@ export const HomePage = () => {
       {/* 1. Hero Section */}
       <section
         ref={heroRef}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className="relative w-full hero-mobile-viewport flex items-center justify-center overflow-hidden border-b border-[#E8E2D5] bg-[#14120E] pt-16 pb-12 sm:pt-24 sm:pb-20"
       >
         {/* Infinite Background Image Slider */}
