@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api, getImageUrl } from '../../services/api';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import {
-  MessageSquare,
   Search,
   RefreshCw,
   MessageCircle,
   Phone,
-  CheckCircle2,
-  Clock,
-  Calendar,
 } from 'lucide-react';
 
 export const AdminEnquiries = () => {

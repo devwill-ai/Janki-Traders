@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCustomer } from '../context/CustomerContext';
 import {
   X,
@@ -24,7 +24,6 @@ export const AccessRequestModal = () => {
     daysRemaining,
     hoursRemaining,
     customer,
-    clearSession,
   } = useCustomer();
 
   const [name, setName] = useState('');

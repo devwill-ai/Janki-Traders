@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Info, HelpCircle, X, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { AlertTriangle, Info, HelpCircle, X, ShieldAlert } from 'lucide-react';
 
 export const ConfirmModal = ({
   isOpen,
@@ -15,6 +15,7 @@ export const ConfirmModal = ({
   isLoading = false,
   onConfirm,
   onCancel,
+  onClose,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
 

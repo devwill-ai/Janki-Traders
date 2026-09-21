@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import {
-  KeyRound,
   CheckCircle2,
   XCircle,
-  Clock,
   Search,
   RefreshCw,
-  AlertCircle,
-  Calendar,
 } from 'lucide-react';
 
 export const AdminAccessRequests = () => {
@@ -18,7 +14,6 @@ export const AdminAccessRequests = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
-  const [selectedDuration, setSelectedDuration] = useState(7); // 7 days default
 
   // Inbuilt Confirm / Alert Dialog State
   const [confirmDialog, setConfirmDialog] = useState({

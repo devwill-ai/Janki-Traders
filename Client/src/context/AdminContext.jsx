@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
 
 const AdminContext = createContext(null);
@@ -14,6 +14,13 @@ export const AdminProvider = ({ children }) => {
     }
   });
   const [isLoading, setIsLoading] = useState(true);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('jt_admin_token');
+    localStorage.removeItem('jt_admin_user');
+    setAdminToken('');
+    setAdminUser(null);
+  }, []);
 
   const checkAdminAuth = useCallback(async () => {
     const token = localStorage.getItem('jt_admin_token');
@@ -35,7 +42,7 @@ export const AdminProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [logout]);
 
   useEffect(() => {
     checkAdminAuth();
@@ -55,13 +62,6 @@ export const AdminProvider = ({ children }) => {
     } catch (error) {
       return { success: false, message: error.message || 'Authentication error.' };
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('jt_admin_token');
-    localStorage.removeItem('jt_admin_user');
-    setAdminToken('');
-    setAdminUser(null);
   };
 
   return (

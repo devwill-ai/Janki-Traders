@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
@@ -12,9 +12,7 @@ import heroSlideMobile2 from '../assets/hero-slide-mobile-2.webp';
 import heroSlideMobile3 from '../assets/hero-slide-mobile-3.webp';
 import {
   ArrowRight,
-  ShieldCheck,
   Droplets,
-  Sparkles,
   Layers,
   Lock,
   MessageCircle,
@@ -22,7 +20,6 @@ import {
   MapPin,
   Clock,
   Compass,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';

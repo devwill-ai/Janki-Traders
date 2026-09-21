@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api, getImageUrl } from '../../services/api';
 import { ConfirmModal } from '../../components/ConfirmModal';
-import { Layers, Plus, Edit2, Trash2, RefreshCw, X, Image as ImageIcon, Upload, CheckCircle2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, RefreshCw, X, Upload, CheckCircle2 } from 'lucide-react';
 
 export const AdminCategories = () => {
   const [categories, setCategories] = useState([]);

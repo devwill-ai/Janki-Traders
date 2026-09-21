@@ -22,7 +22,7 @@ import {
   updateSettings,
 } from '../controllers/adminController.js';
 import { verifyAdmin } from '../middleware/auth.js';
-import { upload } from '../middleware/upload.js';
+import { upload, optimizeImages } from '../middleware/upload.js';
 
 const router = express.Router();
 
@@ -45,14 +45,14 @@ router.put('/customers/:id/block', toggleBlockCustomer);
 
 // 4. Products CRUD
 router.get('/products', getAdminProducts);
-router.post('/products', upload.array('images', 6), createProduct);
-router.put('/products/:id', upload.array('images', 6), updateProduct);
+router.post('/products', upload.array('images', 6), optimizeImages, createProduct);
+router.put('/products/:id', upload.array('images', 6), optimizeImages, updateProduct);
 router.delete('/products/:id', deleteProduct);
 
 // 5. Categories CRUD
 router.get('/categories', getAdminCategories);
-router.post('/categories', upload.single('image'), createCategory);
-router.put('/categories/:id', upload.single('image'), updateCategory);
+router.post('/categories', upload.single('image'), optimizeImages, createCategory);
+router.put('/categories/:id', upload.single('image'), optimizeImages, updateCategory);
 router.delete('/categories/:id', deleteCategory);
 
 // 6. Enquiries Management

@@ -4,6 +4,7 @@ import { Customer } from '../models/Customer.js';
 import { AccessRequest } from '../models/AccessRequest.js';
 import { Enquiry } from '../models/Enquiry.js';
 import { Setting } from '../models/Setting.js';
+import { deleteUploadedFile } from '../utils/fileUtils.js';
 
 // 1. Dashboard Metrics (Section 10)
 export const getDashboardStats = async (req, res, next) => {
@@ -420,6 +421,9 @@ export const updateProduct = async (req, res, next) => {
     if (featured !== undefined) product.featured = featured === true || featured === 'true';
     if (status) product.status = status;
 
+    // Capture previous images to track what was removed on save
+    const previousImages = Array.isArray(product.images) ? [...product.images] : [];
+
     // Handle existing images retained from client
     let keptImages = [];
     if (existingImages !== undefined) {
@@ -445,6 +449,10 @@ export const updateProduct = async (req, res, next) => {
     await product.save();
     await product.populate('category_id', 'name slug');
 
+    // When admin clicks "Save Changes" and save succeeds, safely delete removed old images from VPS disk
+    const removedImages = previousImages.filter((oldImg) => !keptImages.includes(oldImg));
+    removedImages.forEach(deleteUploadedFile);
+
     res.json({
       success: true,
       message: 'Product updated successfully.',
@@ -458,10 +466,18 @@ export const updateProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found.' });
     }
+
+    const imagesToDelete = Array.isArray(product.images) ? [...product.images] : [];
+
+    await Product.findByIdAndDelete(id);
+
+    // Clean up all product images from disk after successful database delete
+    imagesToDelete.forEach(deleteUploadedFile);
+
     res.json({ success: true, message: 'Product deleted successfully.' });
   } catch (error) {
     next(error);
@@ -547,6 +563,8 @@ export const updateCategory = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Category not found.' });
     }
 
+    const oldImage = category.image;
+
     if (name) {
       category.name = name.trim();
       category.slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -560,6 +578,11 @@ export const updateCategory = async (req, res, next) => {
     }
 
     await category.save();
+
+    // When admin saves changes with a new cover image, delete old image from disk
+    if (req.file && oldImage && oldImage !== category.image) {
+      deleteUploadedFile(oldImage);
+    }
 
     res.json({
       success: true,
@@ -584,7 +607,18 @@ export const deleteCategory = async (req, res, next) => {
       });
     }
 
+    const category = await Category.findById(id);
+    if (!category) {
+      return res.status(404).json({ success: false, message: 'Category not found.' });
+    }
+
+    const imageToDelete = category.image;
     await Category.findByIdAndDelete(id);
+
+    if (imageToDelete) {
+      deleteUploadedFile(imageToDelete);
+    }
+
     res.json({ success: true, message: 'Category deleted successfully.' });
   } catch (error) {
     next(error);

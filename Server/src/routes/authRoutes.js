@@ -4,6 +4,7 @@ import {
   getAdminProfile,
   changeAdminPassword,
   getCustomerSession,
+  customerLogout,
 } from '../controllers/authController.js';
 import { verifyAdmin } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
@@ -17,5 +18,6 @@ router.put('/change-password', verifyAdmin, changeAdminPassword);
 
 // Customer Session Check
 router.get('/customer-session', getCustomerSession);
+router.post('/customer-logout', customerLogout);
 
 export default router;

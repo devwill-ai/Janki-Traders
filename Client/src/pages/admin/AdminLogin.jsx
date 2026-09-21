@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAdmin();
 
-  const [email, setEmail] = useState('admin@jankitraders.com');
-  const [password, setPassword] = useState('Admin@12345');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +75,7 @@ export const AdminLogin = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@jankitraders.com"
+                placeholder="Enter admin email"
                 className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
               />
             </div>
@@ -87,13 +88,22 @@ export const AdminLogin = () => {
             <div className="relative">
               <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                className="w-full pl-9 pr-10 py-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#1A1A1A] transition-colors cursor-pointer p-1"
+                title={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useCustomer } from '../context/CustomerContext';
 import { useBulkEnquiry } from '../context/BulkEnquiryContext';
 import { api, getImageUrl } from '../services/api';

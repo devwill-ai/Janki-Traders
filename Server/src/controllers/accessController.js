@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { Customer } from '../models/Customer.js';
 import { AccessRequest } from '../models/AccessRequest.js';
 import { Setting } from '../models/Setting.js';
+import { setCustomerTokenCookie } from '../utils/cookieUtils.js';
 
 // Submit Access Request (Name + Mobile)
 export const submitAccessRequest = async (req, res, next) => {
@@ -75,11 +76,11 @@ export const submitAccessRequest = async (req, res, next) => {
       const daysRemaining = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hoursRemaining = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
+      setCustomerTokenCookie(res, customer.access_token);
       return res.json({
         success: true,
         status: 'active',
         alreadyActive: true,
-        customerToken: customer.access_token,
         customer: { id: customer._id, name: customer.name, mobile: customer.mobile },
         expires_at: existingActiveRequest.expires_at,
         daysRemaining,
@@ -95,10 +96,10 @@ export const submitAccessRequest = async (req, res, next) => {
     });
 
     if (pendingRequest) {
+      setCustomerTokenCookie(res, customer.access_token);
       return res.json({
         success: true,
         status: 'pending',
-        customerToken: customer.access_token,
         customer: { id: customer._id, name: customer.name, mobile: customer.mobile },
         message: 'Your access request is currently pending admin review.',
       });
@@ -120,10 +121,10 @@ export const submitAccessRequest = async (req, res, next) => {
     customer.status = 'pending';
     await customer.save();
 
+    setCustomerTokenCookie(res, customer.access_token);
     res.status(201).json({
       success: true,
       status: 'pending',
-      customerToken: customer.access_token,
       customer: {
         id: customer._id,
         name: customer.name,

@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 import { Admin } from '../models/Admin.js';
 import { Customer } from '../models/Customer.js';
 import { AccessRequest } from '../models/AccessRequest.js';
+import { clearCustomerTokenCookie } from '../utils/cookieUtils.js';
 
-// Generate Admin JWT
+// Generate Admin JWT (24-hour expiration for security)
 const generateToken = (admin) => {
   return jwt.sign(
     { id: admin._id, email: admin.email, role: admin.role, name: admin.name },
     process.env.JWT_SECRET,
-    { expiresIn: '30d' }
+    { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
   );
 };
 
@@ -110,7 +110,7 @@ export const changeAdminPassword = async (req, res, next) => {
 // Restore Customer Session & Access Status
 export const getCustomerSession = async (req, res, next) => {
   try {
-    const customerToken = req.headers['x-customer-token'] || req.query.token;
+    const customerToken = req.cookies?.jt_customer_token || req.headers['x-customer-token'] || req.query.token;
 
     if (!customerToken) {
       return res.json({
@@ -202,4 +202,13 @@ export const getCustomerSession = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+// Customer Logout — clear the httpOnly cookie
+export const customerLogout = async (req, res) => {
+  clearCustomerTokenCookie(res);
+  res.json({
+    success: true,
+    message: 'Logged out successfully.',
+  });
 };

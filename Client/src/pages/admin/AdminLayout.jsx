@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdmin } from '../../context/AdminContext';
 import {
@@ -11,7 +11,6 @@ import {
   Settings,
   LogOut,
   ExternalLink,
-  ShieldAlert,
   MoreHorizontal,
   X,
 } from 'lucide-react';
@@ -290,7 +289,7 @@ export const AdminLayout = () => {
                     {adminUser?.name || 'Administrator'}
                   </p>
                   <p className="text-[10px] text-stone-500 uppercase font-mono">
-                    {adminUser?.email || 'admin@jankitraders.com'}
+                    {adminUser?.email || ''}
                   </p>
                 </div>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-stone-200 text-stone-700 uppercase">

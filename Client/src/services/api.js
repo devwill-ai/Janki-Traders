@@ -9,17 +9,13 @@ export const getImageUrl = (imagePath) => {
 };
 
 /**
- * Universal Fetch wrapper with auto-injected headers
+ * Universal Fetch wrapper with auto-injected headers.
+ * Customer token is now sent automatically via httpOnly cookie
+ * (credentials: 'include' ensures cookies are sent cross-origin).
  */
 export async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
   const headers = options.headers || {};
-
-  // Attach customer token if present
-  const customerToken = localStorage.getItem('jt_customer_token');
-  if (customerToken) {
-    headers['x-customer-token'] = customerToken;
-  }
 
   // Attach admin token if present
   const adminToken = localStorage.getItem('jt_admin_token');
@@ -35,6 +31,7 @@ export async function apiRequest(endpoint, options = {}) {
   const config = {
     ...options,
     headers,
+    credentials: 'include', // Send httpOnly cookies with every request
   };
 
   try {
@@ -73,6 +70,7 @@ export const api = {
     return apiRequest(`/access/status${query ? `?${query}` : ''}`);
   },
   getCustomerSession: () => apiRequest('/auth/customer-session'),
+  customerLogout: () => apiRequest('/auth/customer-logout', { method: 'POST' }),
 
   // Enquiries
   submitEnquiry: (data) => apiRequest('/enquiries', { method: 'POST', body: JSON.stringify(data) }),
@@ -131,3 +129,4 @@ export const api = {
   getAdminSettings: () => apiRequest('/admin/settings'),
   updateAdminSettings: (data) => apiRequest('/admin/settings', { method: 'PUT', body: JSON.stringify(data) }),
 };
+

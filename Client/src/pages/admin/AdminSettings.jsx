@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useAdmin } from '../../context/AdminContext';
 import {
-  Settings,
-  Lock,
   Phone,
   MessageCircle,
-  MapPin,
-  Clock,
   Save,
   CheckCircle2,
   AlertCircle,
   Key,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export const AdminSettings = () => {
@@ -37,8 +35,10 @@ export const AdminSettings = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [loading, setLoading] = useState(true);
   const [savingSettings, setSavingSettings] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [settingsFeedback, setSettingsFeedback] = useState(null);
@@ -47,7 +47,6 @@ export const AdminSettings = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        setLoading(true);
         const res = await api.getAdminSettings();
         if (res.success && res.data) {
           setSettings({
@@ -65,8 +64,6 @@ export const AdminSettings = () => {
         }
       } catch (err) {
         console.warn('Failed to load settings:', err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -273,7 +270,7 @@ export const AdminSettings = () => {
             </h3>
             <div className="p-3.5 rounded-xl bg-[#FAF9F5] border border-[#E8E2D5] text-xs space-y-2 text-stone-600">
               <p><strong className="text-[#1A1A1A]">Name:</strong> {adminUser?.name || 'Janki Traders Admin'}</p>
-              <p className="truncate"><strong className="text-[#1A1A1A]">Email:</strong> {adminUser?.email || 'admin@jankitraders.com'}</p>
+              <p className="truncate"><strong className="text-[#1A1A1A]">Email:</strong> {adminUser?.email || '—'}</p>
               <p><strong className="text-[#1A1A1A]">Role:</strong> <span className="uppercase text-[#8C6D46] font-semibold">{adminUser?.role || 'superadmin'}</span></p>
             </div>
           </div>
@@ -300,38 +297,71 @@ export const AdminSettings = () => {
             <form onSubmit={handlePasswordSubmit} className="space-y-3 text-xs">
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Current Password</label>
-                <input
-                  type="password"
-                  required
-                  value={passwordData.currentPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
-                />
+                <div className="relative">
+                  <input
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    required
+                    value={passwordData.currentPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="w-full pl-3 pr-9 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#1A1A1A] transition-colors cursor-pointer p-0.5"
+                    title={showCurrentPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">New Password</label>
-                <input
-                  type="password"
-                  required
-                  value={passwordData.newPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
-                />
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    required
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="w-full pl-3 pr-9 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#1A1A1A] transition-colors cursor-pointer p-0.5"
+                    title={showNewPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Confirm New Password</label>
-                <input
-                  type="password"
-                  required
-                  value={passwordData.confirmPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="w-full pl-3 pr-9 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#1A1A1A] transition-colors cursor-pointer p-0.5"
+                    title={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
               </div>
 
               <div className="pt-2">

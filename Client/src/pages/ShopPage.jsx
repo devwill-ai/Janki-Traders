@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import { ProductCard } from '../components/ProductCard';
 import { EnquiryModal } from '../components/EnquiryModal';
 import {
   Search,
-  Filter,
   Lock,
   Unlock,
-  Sparkles,
   Clock,
-  ShieldCheck,
-  RefreshCw,
   X,
 } from 'lucide-react';
 
@@ -180,12 +176,12 @@ export const ShopPage = () => {
           </div>
 
           {/* Visibility Switch */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-stone-500 font-medium">Visibility:</span>
-            <div className="inline-flex bg-white p-1 rounded-lg border border-[#E8E2D5] text-xs shadow-2xs">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-[clamp(10.5px,2.2vw,12px)] text-stone-500 font-medium">Visibility:</span>
+            <div className="inline-flex bg-white p-0.5 sm:p-1 rounded-lg border border-[#E8E2D5] text-[clamp(10px,2vw,12px)] shadow-2xs">
               <button
                 onClick={() => setVisibilityFilter('all')}
-                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                className={`px-[clamp(8px,1.8vw,12px)] py-1 rounded-md transition-colors cursor-pointer ${
                   visibilityFilter === 'all' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
                 }`}
               >
@@ -193,7 +189,7 @@ export const ShopPage = () => {
               </button>
               <button
                 onClick={() => setVisibilityFilter('public')}
-                className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                className={`px-[clamp(8px,1.8vw,12px)] py-1 rounded-md transition-colors cursor-pointer ${
                   visibilityFilter === 'public' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
                 }`}
               >
@@ -201,7 +197,7 @@ export const ShopPage = () => {
               </button>
               <button
                 onClick={() => setVisibilityFilter('restricted')}
-                className={`px-3 py-1 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                className={`px-[clamp(8px,1.8vw,12px)] py-1 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
                   visibilityFilter === 'restricted' ? 'bg-[#1A1A1A] text-white font-medium' : 'text-[#6B6862] hover:text-[#1A1A1A]'
                 }`}
               >

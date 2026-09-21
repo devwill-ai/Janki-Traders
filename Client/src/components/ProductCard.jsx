@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Unlock, MessageCircle, ArrowRight, Sparkles, Plus, Check } from 'lucide-react';
+import { Lock, MessageCircle, ArrowRight, Sparkles, Plus, Check } from 'lucide-react';
 import { getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
 import { useBulkEnquiry } from '../context/BulkEnquiryContext';
@@ -52,36 +51,39 @@ export const ProductCard = ({ product, onInquireClick }) => {
         />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+        <div className="absolute top-[clamp(6px,1.8vw,12px)] left-[clamp(6px,1.8vw,12px)] right-[clamp(6px,1.8vw,12px)] flex items-start justify-between gap-1.5 pointer-events-none">
           {product.category_id?.name && (
-            <span className="px-2.5 py-1 text-[11px] font-medium tracking-wide uppercase bg-white/90 backdrop-blur-sm text-[#1A1A1A] rounded-sm shadow-xs border border-[#E8E2D5]">
+            <span
+              className="px-[clamp(5px,1.2vw,9px)] py-[clamp(2px,0.5vw,4px)] text-[clamp(8px,1.6vw,10.5px)] font-medium tracking-wider uppercase bg-white/95 backdrop-blur-sm text-[#1A1A1A] rounded-sm shadow-xs border border-[#E8E2D5] max-w-[62%] truncate shrink min-w-0 leading-tight"
+              title={product.category_id.name}
+            >
               {product.category_id.name}
             </span>
           )}
 
           {isRestricted ? (
-            <span className="px-2.5 py-1 text-[11px] font-semibold tracking-wider uppercase bg-[#1A1A1A] text-[#FAF9F5] rounded-sm flex items-center gap-1 shadow-sm">
-              <Lock size={11} className="text-[#C5A880]" />
+            <span className="px-[clamp(5px,1.2vw,9px)] py-[clamp(2px,0.5vw,4px)] text-[clamp(8px,1.6vw,10.5px)] font-semibold tracking-wider uppercase bg-[#1A1A1A] text-[#FAF9F5] rounded-sm flex items-center gap-1 shadow-sm shrink-0 whitespace-nowrap leading-tight">
+              <Lock size={10} className="text-[#C5A880] shrink-0" />
               <span>Restricted</span>
             </span>
           ) : product.featured ? (
-            <span className="px-2.5 py-1 text-[11px] font-semibold tracking-wider uppercase bg-[#8C6D46] text-white rounded-sm flex items-center gap-1 shadow-sm">
-              <Sparkles size={11} />
+            <span className="px-[clamp(5px,1.2vw,9px)] py-[clamp(2px,0.5vw,4px)] text-[clamp(8px,1.6vw,10.5px)] font-semibold tracking-wider uppercase bg-[#8C6D46] text-white rounded-sm flex items-center gap-1 shadow-sm shrink-0 whitespace-nowrap leading-tight">
+              <Sparkles size={10} className="shrink-0" />
               <span>Featured</span>
             </span>
           ) : null}
         </div>
 
         {/* Product Code & Bulk Selection Badges */}
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+        <div className="absolute bottom-[clamp(6px,1.8vw,12px)] left-[clamp(6px,1.8vw,12px)] right-[clamp(6px,1.8vw,12px)] flex items-center justify-between pointer-events-none">
           {product.product_code && (
-            <span className="text-[clamp(9px,2.2vw,10.5px)] font-mono tracking-widest font-semibold px-2 py-0.5 rounded-sm bg-black/60 backdrop-blur-sm text-white border border-white/20">
+            <span className="text-[clamp(8px,1.6vw,10px)] font-mono tracking-widest font-semibold px-[clamp(4px,1vw,8px)] py-[clamp(1px,0.3vw,2px)] rounded-sm bg-black/60 backdrop-blur-sm text-white border border-white/20 leading-tight">
               {product.product_code}
             </span>
           )}
           {inBulk && (
-            <span className="ml-auto text-[clamp(9px,2.2vw,10.5px)] font-medium tracking-wide px-2 py-0.5 rounded-sm bg-[#8C6D46] text-white shadow-xs flex items-center gap-1">
-              <Check size={10} className="stroke-[3]" />
+            <span className="ml-auto text-[clamp(8px,1.6vw,10px)] font-medium tracking-wide px-[clamp(4px,1vw,8px)] py-[clamp(1px,0.3vw,2px)] rounded-sm bg-[#8C6D46] text-white shadow-xs flex items-center gap-1 leading-tight">
+              <Check size={9} className="stroke-[3]" />
               <span>In List</span>
             </span>
           )}
@@ -144,11 +146,11 @@ export const ProductCard = ({ product, onInquireClick }) => {
               <Link
                 to={`/shop/${product._id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 py-2 px-[clamp(5px,1.8vw,8px)] rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/70 text-[#1A1A1A] text-[clamp(10px,2.4vw,12px)] font-semibold border border-[#E8E2D5] flex items-center justify-center gap-1 transition-colors min-w-[58px] shrink-0"
+                className="flex-1 py-1.5 sm:py-2 px-[clamp(4px,1.2vw,8px)] rounded-md bg-[#FAF9F5] hover:bg-[#E8E2D5]/70 text-[#1A1A1A] text-[clamp(9.5px,2vw,11.5px)] font-semibold border border-[#E8E2D5] flex items-center justify-center gap-1 transition-colors min-w-[50px] shrink-0 leading-tight"
                 title="View Door Details"
               >
                 <span>Details</span>
-                <ArrowRight size={12} className="text-[#8C6D46] shrink-0" />
+                <ArrowRight size={11} className="text-[#8C6D46] shrink-0" />
               </Link>
 
               <button
@@ -158,7 +160,7 @@ export const ProductCard = ({ product, onInquireClick }) => {
                   e.stopPropagation();
                   toggleBulk(product);
                 }}
-                className={`py-2 px-1.5 w-[70px] rounded-md text-[clamp(10px,2.2vw,11.5px)] font-medium transition-all flex items-center justify-center gap-1 cursor-pointer border shrink-0 ${
+                className={`py-1.5 sm:py-2 px-1 sm:px-1.5 w-[clamp(52px,13vw,68px)] rounded-md text-[clamp(9.5px,2vw,11.5px)] font-medium transition-all flex items-center justify-center gap-0.5 sm:gap-1 cursor-pointer border shrink-0 leading-tight ${
                   inBulk
                     ? 'bg-[#8C6D46] hover:bg-[#785c39] text-white border-[#8C6D46] shadow-xs'
                     : 'bg-[#FAF9F5] hover:bg-[#E8E2D5] text-[#4A4742] border-[#E8E2D5]'
@@ -166,9 +168,9 @@ export const ProductCard = ({ product, onInquireClick }) => {
                 title={inBulk ? 'Remove from Bulk Enquiry' : 'Add to Bulk Enquiry'}
               >
                 {inBulk ? (
-                  <Check size={11} className="stroke-[2.5] shrink-0" />
+                  <Check size={10} className="stroke-[2.5] shrink-0" />
                 ) : (
-                  <Plus size={11} className="shrink-0" />
+                  <Plus size={10} className="shrink-0" />
                 )}
                 <span>{inBulk ? 'Selected' : 'Bulk'}</span>
               </button>
@@ -179,7 +181,7 @@ export const ProductCard = ({ product, onInquireClick }) => {
                   e.stopPropagation();
                   if (onInquireClick) onInquireClick(product);
                 }}
-                className="py-2 px-[clamp(6px,2vw,10px)] rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-[clamp(10px,2.4vw,12px)] font-medium transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer shrink-0"
+                className="py-1.5 sm:py-2 px-[clamp(5px,1.4vw,9px)] rounded-md bg-[#1A1A1A] hover:bg-[#8C6D46] text-white text-[clamp(9.5px,2vw,11.5px)] font-medium transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer shrink-0 leading-tight"
                 title="Send Instant Enquiry"
               >
                 <span>Inquire</span>
@@ -190,10 +192,10 @@ export const ProductCard = ({ product, onInquireClick }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="p-2 rounded-md bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors border border-[#25D366]/30 flex items-center justify-center shrink-0"
+                className="p-1.5 sm:p-2 rounded-md bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors border border-[#25D366]/30 flex items-center justify-center shrink-0"
                 title="Chat on WhatsApp"
               >
-                <MessageCircle size={15} />
+                <MessageCircle size={14} />
               </a>
             </>
           )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCustomer } from '../context/CustomerContext';
 import { useBulkEnquiry } from '../context/BulkEnquiryContext';
@@ -14,7 +14,7 @@ import {
 
 export const Navbar = () => {
   const location = useLocation();
-  const { status, hasRestrictedAccess, daysRemaining, hoursRemaining, openAccessModal, customerName } = useCustomer();
+  const { status, daysRemaining, hoursRemaining, openAccessModal } = useCustomer();
   const { distinctCount, openBulkModal } = useBulkEnquiry();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);

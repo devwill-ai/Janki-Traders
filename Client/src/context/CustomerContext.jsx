@@ -1,13 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
 
 const CustomerContext = createContext(null);
 
 export const CustomerProvider = ({ children }) => {
   const [customer, setCustomer] = useState(null);
-  const [customerToken, setCustomerToken] = useState(localStorage.getItem('jt_customer_token') || '');
-  const [customerMobile, setCustomerMobile] = useState(localStorage.getItem('jt_customer_mobile') || '');
-  const [customerName, setCustomerName] = useState(localStorage.getItem('jt_customer_name') || '');
+  const [customerMobile, setCustomerMobile] = useState('');
+  const [customerName, setCustomerName] = useState('');
   const [status, setStatus] = useState('public'); // public, pending, active, expired, rejected, blocked
   const [hasRestrictedAccess, setHasRestrictedAccess] = useState(false);
   const [accessRequest, setAccessRequest] = useState(null);
@@ -29,23 +28,15 @@ export const CustomerProvider = ({ children }) => {
     }
   }, []);
 
-  // Check and restore customer access
+  // Check and restore customer access via httpOnly cookie (sent automatically)
   const checkAccess = useCallback(async () => {
-    const token = localStorage.getItem('jt_customer_token');
-    const mobile = localStorage.getItem('jt_customer_mobile');
-
-    if (!token && !mobile) {
-      setStatus('public');
-      setHasRestrictedAccess(false);
-      setIsLoading(false);
-      return;
-    }
-
     try {
       setIsLoading(true);
       const res = await api.getCustomerSession();
       if (res.success && res.authenticated) {
         setCustomer(res.customer);
+        setCustomerName(res.customer?.name || '');
+        setCustomerMobile(res.customer?.mobile || '');
         setStatus(res.status || 'public');
         setHasRestrictedAccess(!!res.hasRestrictedAccess);
         if (res.request) {
@@ -76,14 +67,9 @@ export const CustomerProvider = ({ children }) => {
     try {
       const res = await api.requestAccess({ name, mobile });
       if (res.success) {
-        if (res.customerToken) {
-          localStorage.setItem('jt_customer_token', res.customerToken);
-          setCustomerToken(res.customerToken);
-        }
-        localStorage.setItem('jt_customer_mobile', mobile);
-        localStorage.setItem('jt_customer_name', name);
-        setCustomerMobile(mobile);
-        setCustomerName(name);
+        // Token is now set as httpOnly cookie by the server — no localStorage needed
+        setCustomerMobile(res.customer?.mobile || mobile);
+        setCustomerName(res.customer?.name || name);
 
         setStatus(res.status);
         if (res.status === 'active') {
@@ -102,12 +88,14 @@ export const CustomerProvider = ({ children }) => {
     }
   };
 
-  const clearSession = () => {
-    localStorage.removeItem('jt_customer_token');
-    localStorage.removeItem('jt_customer_mobile');
-    localStorage.removeItem('jt_customer_name');
+  const clearSession = async () => {
+    // Call server to clear the httpOnly cookie
+    try {
+      await api.customerLogout();
+    } catch (err) {
+      console.warn('Logout request failed:', err.message);
+    }
     setCustomer(null);
-    setCustomerToken('');
     setCustomerMobile('');
     setCustomerName('');
     setStatus('public');
@@ -124,7 +112,6 @@ export const CustomerProvider = ({ children }) => {
         customer,
         customerName,
         customerMobile,
-        customerToken,
         status,
         hasRestrictedAccess,
         accessRequest,
@@ -152,3 +139,4 @@ export const useCustomer = () => {
   }
   return context;
 };
+

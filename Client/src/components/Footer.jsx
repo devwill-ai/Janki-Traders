@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCustomer } from '../context/CustomerContext';
-import { Phone, MessageCircle, MapPin, Clock, ShieldCheck, Mail, ArrowUpRight } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 export const Footer = () => {
   const { settings } = useCustomer();

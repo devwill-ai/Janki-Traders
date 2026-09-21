@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import {
-  Users,
   Search,
   RefreshCw,
-  Plus,
   CalendarPlus,
-  XCircle,
   Eye,
-  AlertCircle,
   X,
 } from 'lucide-react';
 

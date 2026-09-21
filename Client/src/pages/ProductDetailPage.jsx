@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api, getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
@@ -7,23 +7,19 @@ import { EnquiryModal } from '../components/EnquiryModal';
 import {
   ArrowLeft,
   Lock,
-  Unlock,
   MessageCircle,
   MessageSquare,
-  Sparkles,
-  ShieldCheck,
   CheckCircle2,
   Share2,
   Check,
   Plus,
-  Layers,
 } from 'lucide-react';
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { hasRestrictedAccess, openAccessModal, settings } = useCustomer();
-  const { isInBulk, toggleBulk, openBulkModal } = useBulkEnquiry();
+  const { isInBulk, toggleBulk } = useBulkEnquiry();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -145,6 +141,10 @@ export const ProductDetailPage = () => {
               <img
                 src={images[activeImageIndex]}
                 alt={product.name}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/placeholder-door.webp';
+                }}
                 className="w-full h-full object-cover object-center"
               />
 
@@ -181,7 +181,15 @@ export const ProductDetailPage = () => {
                         : 'border-[#E8E2D5] opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt={`Thumb ${idx}`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/placeholder-door.webp';
+                      }}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

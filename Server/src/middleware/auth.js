@@ -58,8 +58,8 @@ export const resolveCustomerAccess = async (req, res, next) => {
       }
     }
 
-    // Extract customer identification strictly from token
-    const customerToken = req.headers['x-customer-token'] || (authHeader?.startsWith('Customer ') ? authHeader.split(' ')[1] : null);
+    // Extract customer token from httpOnly cookie (primary) or header (fallback)
+    const customerToken = req.cookies?.jt_customer_token || req.headers['x-customer-token'] || (authHeader?.startsWith('Customer ') ? authHeader.split(' ')[1] : null);
 
     if (!customerToken) {
       req.hasRestrictedAccess = false;

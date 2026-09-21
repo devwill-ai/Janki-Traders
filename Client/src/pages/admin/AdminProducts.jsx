@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api, getImageUrl } from '../../services/api';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import {
-  ShoppingBag,
   Plus,
   Search,
   Edit2,
   Trash2,
-  Lock,
-  Unlock,
   Sparkles,
   RefreshCw,
   X,
   Upload,
-  Image as ImageIcon,
   CheckCircle2,
 } from 'lucide-react';
 

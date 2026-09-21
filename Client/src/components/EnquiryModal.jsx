@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useCustomer } from '../context/CustomerContext';
 import { api, getImageUrl } from '../services/api';
 import { X, MessageSquare, Phone, User, Send, CheckCircle2, MessageCircle, AlertCircle } from 'lucide-react';
 
 export const EnquiryModal = ({ isOpen, onClose, product, onEnquirySuccess }) => {
-  const { customerName, customerMobile, settings } = useCustomer();
+  const { customerName, customerMobile } = useCustomer();
 
   const [name, setName] = useState(customerName || '');
   const [mobile, setMobile] = useState(customerMobile || '');

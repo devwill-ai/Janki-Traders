@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { CustomerProvider } from './context/CustomerContext';
 import { BulkEnquiryProvider } from './context/BulkEnquiryContext';

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useBulkEnquiry } from '../context/BulkEnquiryContext';
 import { ArrowRight, Check, Layers, X } from 'lucide-react';
 

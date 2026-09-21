@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
@@ -68,9 +69,12 @@ app.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-customer-token', 'x-customer-mobile'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+// Cookie Parser (must be before routes so req.cookies is populated)
+app.use(cookieParser());
 
 // Body Parsers
 app.use(express.json({ limit: '10mb' }));
@@ -79,6 +83,12 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files for uploaded images
 const uploadsPath = path.join(__dirname, '../uploads');
 app.use('/uploads', express.static(uploadsPath));
+app.use('/uploads', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Requested image not found or has been removed.',
+  });
+});
 
 // General rate limiter for API calls
 app.use('/api', generalLimiter);

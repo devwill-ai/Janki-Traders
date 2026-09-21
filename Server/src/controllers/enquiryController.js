@@ -137,7 +137,7 @@ export const createEnquiry = async (req, res, next) => {
 // Get My Inquired Products (Section 6)
 export const getMyEnquiries = async (req, res, next) => {
   try {
-    const customerToken = req.headers['x-customer-token'] || req.query.token;
+    const customerToken = req.cookies?.jt_customer_token || req.headers['x-customer-token'] || req.query.token;
 
     if (!customerToken) {
       return res.status(401).json({

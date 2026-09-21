@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCustomer } from '../context/CustomerContext';
 import {
   Phone,
@@ -7,7 +7,6 @@ import {
   Clock,
   Mail,
   ExternalLink,
-  ShieldCheck,
   Send,
   CheckCircle2,
 } from 'lucide-react';

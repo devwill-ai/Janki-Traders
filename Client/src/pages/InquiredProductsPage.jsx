@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api, getImageUrl } from '../services/api';
 import { useCustomer } from '../context/CustomerContext';
@@ -9,13 +9,12 @@ import {
   CheckCircle2,
   Phone,
   Search,
-  ArrowRight,
   RefreshCw,
   ShoppingBag,
 } from 'lucide-react';
 
 export const InquiredProductsPage = () => {
-  const { customerMobile, customerName, settings } = useCustomer();
+  const { customerMobile, settings } = useCustomer();
 
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
