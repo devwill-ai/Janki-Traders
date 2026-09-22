@@ -4,45 +4,39 @@ import { api } from '../services/api';
 const AdminContext = createContext(null);
 
 export const AdminProvider = ({ children }) => {
-  const [adminToken, setAdminToken] = useState(localStorage.getItem('jt_admin_token') || '');
-  const [adminUser, setAdminUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem('jt_admin_user');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [adminUser, setAdminUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      await api.adminLogout();
+    } catch (err) {
+      console.warn('Admin logout request failed:', err.message);
+    }
+    // Remove any leftover legacy storage keys
     localStorage.removeItem('jt_admin_token');
     localStorage.removeItem('jt_admin_user');
-    setAdminToken('');
     setAdminUser(null);
   }, []);
 
   const checkAdminAuth = useCallback(async () => {
-    const token = localStorage.getItem('jt_admin_token');
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
     try {
+      setIsLoading(true);
       const res = await api.getAdminProfile();
-      if (res.success) {
+      if (res.success && res.admin) {
         setAdminUser(res.admin);
       } else {
-        logout();
+        setAdminUser(null);
       }
     } catch (err) {
-      console.warn('Admin token verification failed:', err.message);
-      logout();
+      setAdminUser(null);
     } finally {
       setIsLoading(false);
+      // Clean up legacy localStorage remnants
+      localStorage.removeItem('jt_admin_token');
+      localStorage.removeItem('jt_admin_user');
     }
-  }, [logout]);
+  }, []);
 
   useEffect(() => {
     checkAdminAuth();
@@ -51,10 +45,10 @@ export const AdminProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await api.adminLogin({ email, password });
-      if (res.success && res.token) {
-        localStorage.setItem('jt_admin_token', res.token);
-        localStorage.setItem('jt_admin_user', JSON.stringify(res.admin));
-        setAdminToken(res.token);
+      if (res.success && res.admin) {
+        // Cookie is set as httpOnly by server — clean any legacy localStorage keys
+        localStorage.removeItem('jt_admin_token');
+        localStorage.removeItem('jt_admin_user');
         setAdminUser(res.admin);
         return { success: true };
       }
@@ -67,9 +61,8 @@ export const AdminProvider = ({ children }) => {
   return (
     <AdminContext.Provider
       value={{
-        adminToken,
         adminUser,
-        isAuthenticated: !!adminToken,
+        isAuthenticated: !!adminUser,
         isLoading,
         login,
         logout,
@@ -80,6 +73,7 @@ export const AdminProvider = ({ children }) => {
     </AdminContext.Provider>
   );
 };
+
 
 export const useAdmin = () => {
   const context = useContext(AdminContext);

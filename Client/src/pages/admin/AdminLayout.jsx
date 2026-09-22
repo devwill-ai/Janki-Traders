@@ -16,17 +16,17 @@ import {
 } from 'lucide-react';
 
 export const AdminLayout = () => {
-  const { isAuthenticated, adminUser, logout } = useAdmin();
+  const { isAuthenticated, adminUser, logout, isLoading } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
   const mainContentRef = useRef(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
       navigate('/admin/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   // Close "More" menu + scroll to top on route change
   useEffect(() => {
@@ -36,9 +36,18 @@ export const AdminLayout = () => {
     }
   }, [location.pathname]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#C5A880]"></div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return null;
   }
+
 
   const navLinks = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },

@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken';
 import { Admin } from '../models/Admin.js';
 import { Customer } from '../models/Customer.js';
 import { AccessRequest } from '../models/AccessRequest.js';
-import { clearCustomerTokenCookie } from '../utils/cookieUtils.js';
+import {
+  clearCustomerTokenCookie,
+  setAdminTokenCookie,
+  clearAdminTokenCookie,
+} from '../utils/cookieUtils.js';
 
 // Generate Admin JWT (24-hour expiration for security)
 const generateToken = (admin) => {
@@ -42,11 +46,11 @@ export const adminLogin = async (req, res, next) => {
     }
 
     const token = generateToken(admin);
+    setAdminTokenCookie(res, token);
 
     res.json({
       success: true,
       message: 'Admin authentication successful.',
-      token,
       admin: {
         id: admin._id,
         name: admin.name,
@@ -210,5 +214,14 @@ export const customerLogout = async (req, res) => {
   res.json({
     success: true,
     message: 'Logged out successfully.',
+  });
+};
+
+// Admin Logout — clear the httpOnly cookie
+export const adminLogout = async (req, res) => {
+  clearAdminTokenCookie(res);
+  res.json({
+    success: true,
+    message: 'Admin logged out successfully.',
   });
 };

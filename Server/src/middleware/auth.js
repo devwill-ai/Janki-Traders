@@ -7,14 +7,15 @@ import { AccessRequest } from '../models/AccessRequest.js';
 export const verifyAdmin = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = req.cookies?.jt_admin_token || (authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null);
+
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: 'Access denied. No admin token provided.',
       });
     }
 
-    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const admin = await Admin.findById(decoded.id).select('-password');
@@ -44,10 +45,10 @@ export const resolveCustomerAccess = async (req, res, next) => {
   try {
     // Check if request is made by an authenticated admin
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
+    const adminToken = req.cookies?.jt_admin_token || (authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null);
+    if (adminToken) {
       try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
         if (decoded.role === 'admin' || decoded.role === 'superadmin') {
           req.hasRestrictedAccess = true;
           req.isAdmin = true;
@@ -57,6 +58,7 @@ export const resolveCustomerAccess = async (req, res, next) => {
         // Not a valid admin token, proceed to check customer token
       }
     }
+
 
     // Extract customer token from httpOnly cookie (primary) or header (fallback)
     const customerToken = req.cookies?.jt_customer_token || req.headers['x-customer-token'] || (authHeader?.startsWith('Customer ') ? authHeader.split(' ')[1] : null);

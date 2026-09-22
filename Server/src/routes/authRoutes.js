@@ -3,6 +3,7 @@ import {
   adminLogin,
   getAdminProfile,
   changeAdminPassword,
+  adminLogout,
   getCustomerSession,
   customerLogout,
 } from '../controllers/authController.js';
@@ -15,9 +16,11 @@ const router = express.Router();
 router.post('/admin-login', authLimiter, adminLogin);
 router.get('/admin-profile', verifyAdmin, getAdminProfile);
 router.put('/change-password', verifyAdmin, changeAdminPassword);
+router.post('/admin-logout', adminLogout);
 
 // Customer Session Check
 router.get('/customer-session', getCustomerSession);
 router.post('/customer-logout', customerLogout);
+
 
 export default router;

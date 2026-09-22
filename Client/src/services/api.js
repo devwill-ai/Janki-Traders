@@ -17,12 +17,6 @@ export async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
   const headers = options.headers || {};
 
-  // Attach admin token if present
-  const adminToken = localStorage.getItem('jt_admin_token');
-  if (adminToken && !headers['Authorization']) {
-    headers['Authorization'] = `Bearer ${adminToken}`;
-  }
-
   // Default content type to JSON unless FormData
   if (!(options.body instanceof FormData) && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
@@ -81,10 +75,12 @@ export const api = {
 
   // Admin APIs
   adminLogin: (credentials) => apiRequest('/auth/admin-login', { method: 'POST', body: JSON.stringify(credentials) }),
+  adminLogout: () => apiRequest('/auth/admin-logout', { method: 'POST' }),
   getAdminProfile: () => apiRequest('/auth/admin-profile'),
   changeAdminPassword: (data) => apiRequest('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) }),
 
   getDashboardStats: () => apiRequest('/admin/dashboard'),
+
   
   // Admin Access Requests
   getAccessRequests: (params = {}) => {

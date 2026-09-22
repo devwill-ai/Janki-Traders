@@ -4,14 +4,17 @@
  * so it is never accessible to client-side JavaScript.
  */
 
-const COOKIE_NAME = 'jt_customer_token';
+const CUSTOMER_COOKIE_NAME = 'jt_customer_token';
+const ADMIN_COOKIE_NAME = 'jt_admin_token';
+
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Set the customer access token as an httpOnly cookie on the response.
  */
 export function setCustomerTokenCookie(res, token) {
-  res.cookie(COOKIE_NAME, token, {
+  res.cookie(CUSTOMER_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -24,10 +27,36 @@ export function setCustomerTokenCookie(res, token) {
  * Clear the customer access token cookie.
  */
 export function clearCustomerTokenCookie(res) {
-  res.clearCookie(COOKIE_NAME, {
+  res.clearCookie(CUSTOMER_COOKIE_NAME, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });
 }
+
+/**
+ * Set the admin JWT as an httpOnly cookie on the response.
+ */
+export function setAdminTokenCookie(res, token) {
+  res.cookie(ADMIN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: TWENTY_FOUR_HOURS_MS,
+    path: '/',
+  });
+}
+
+/**
+ * Clear the admin JWT cookie.
+ */
+export function clearAdminTokenCookie(res) {
+  res.clearCookie(ADMIN_COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  });
+}
+
