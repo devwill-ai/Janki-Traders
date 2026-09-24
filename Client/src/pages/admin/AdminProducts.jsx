@@ -206,7 +206,7 @@ export const AdminProducts = () => {
             Product Management
           </h1>
           <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-            Create, edit, and categorize doors. Configure Public vs Restricted visibility per Section 13.
+            Create, edit, and categorize doors. Configure Public vs Restricted visibility.
           </p>
         </div>
 

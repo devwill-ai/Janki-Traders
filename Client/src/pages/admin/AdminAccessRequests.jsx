@@ -118,7 +118,7 @@ export const AdminAccessRequests = () => {
             Catalogue Access Requests
           </h1>
           <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-            Manage customer 7-day trade catalogue access requests per Section 11.
+            Manage customer 7-day trade catalogue access requests.
           </p>
         </div>
 

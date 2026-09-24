@@ -161,7 +161,7 @@ export const AdminCategories = () => {
             Category Management
           </h1>
           <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-            Organize door types (Waterproof Doors, Glass Doors, Wooden Doors) per Section 14.
+            Organize door types (Waterproof Doors, Glass Doors, Wooden Doors).
           </p>
         </div>
 

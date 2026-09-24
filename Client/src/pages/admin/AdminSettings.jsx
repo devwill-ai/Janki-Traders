@@ -130,7 +130,7 @@ export const AdminSettings = () => {
           Store & System Settings
         </h1>
         <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-          Configure default access duration, store contacts, WhatsApp channels, and admin credentials per Section 16.
+          Configure default access duration, store contacts, WhatsApp channels, and admin credentials.
         </p>
       </div>
 

@@ -140,7 +140,7 @@ export const AdminCustomers = () => {
             Customer Management
           </h1>
           <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-            View customer identities, monitor 7-day catalogue passes, extend or revoke access per Section 12.
+            View customer identities, monitor 7-day catalogue passes, extend or revoke access.
           </p>
         </div>
 

@@ -87,7 +87,7 @@ export const AdminEnquiries = () => {
             Product Enquiries Desk
           </h1>
           <p className="text-[clamp(0.75rem,2.2vw,0.8125rem)] text-[#6B6862] mt-0.5">
-            Monitor customer enquiries, update follow-up progress, and initiate WhatsApp chats per Section 15.
+            Monitor customer enquiries, update follow-up progress, and initiate WhatsApp chats.
           </p>
         </div>
 
