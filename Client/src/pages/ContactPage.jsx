@@ -17,9 +17,15 @@ export const ContactPage = () => {
   const phone = settings?.contact_number || '+91 98765 43210';
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
-  const email = settings?.email || 'sales@jankitraders.com';
-  const address = settings?.address || 'Plot No. 42, Timber & Architectural Market, Ring Road, Ahmedabad, Gujarat 380001';
-  const mapsUrl = settings?.google_maps_url || 'https://maps.google.com/?q=Janki+Traders+Ahmedabad';
+  const email = settings?.email && settings.email !== 'sales@jankitraders.com' && settings.email !== 'info@jankitraders.com'
+    ? settings.email
+    : 'parthsabhadiya80@gmail.com';
+  const address = settings?.address && !settings.address.includes('Plot No. 42')
+    ? settings.address
+    : 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
+  const mapsUrl = settings?.google_maps_url && !settings.google_maps_url.includes('Ahmedabad')
+    ? settings.google_maps_url
+    : 'https://maps.google.com/?q=Trapaj+Road+Alang+Bhavnagar';
   const hours = settings?.business_hours || 'Monday - Saturday: 9:30 AM to 8:00 PM (Sunday Closed)';
 
   const [formSent, setFormSent] = useState(false);

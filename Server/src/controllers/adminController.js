@@ -715,6 +715,7 @@ export const updateSettings = async (req, res, next) => {
       'contact_number',
       'email',
       'address',
+      'gst_number',
       'google_maps_url',
       'business_hours',
       'about_text',

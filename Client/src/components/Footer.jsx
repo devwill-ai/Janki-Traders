@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCustomer } from '../context/CustomerContext';
-import { Phone, MessageCircle, MapPin, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Clock, ShieldCheck, ArrowUpRight, Mail, FileText } from 'lucide-react';
 
 export const Footer = () => {
   const { settings } = useCustomer();
@@ -8,7 +8,13 @@ export const Footer = () => {
   const phone = settings?.contact_number || '+91 98765 43210';
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
-  const address = settings?.address || 'Plot No. 42, Timber & Architectural Market, Ring Road, Ahmedabad, Gujarat 380001';
+  const address = settings?.address && !settings.address.includes('Plot No. 42')
+    ? settings.address
+    : 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
+  const email = settings?.email && settings.email !== 'info@jankitraders.com' && settings.email !== 'sales@jankitraders.com'
+    ? settings.email
+    : 'parthsabhadiya80@gmail.com';
+  const gstNumber = settings?.gst_number || '24QRCPS1308N1ZA';
   const hours = settings?.business_hours || 'Mon - Sat: 9:30 AM to 8:00 PM (Sunday Closed)';
 
   return (
@@ -128,6 +134,14 @@ export const Footer = () => {
                 <Phone size={16} className="text-[#C5A880] shrink-0" />
                 <a href={`tel:${phone}`} className="hover:text-white transition-colors">{phone}</a>
               </div>
+              <div className="flex items-center gap-2.5">
+                <Mail size={16} className="text-[#C5A880] shrink-0" />
+                <a href={`mailto:${email}`} className="hover:text-white transition-colors truncate">{email}</a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FileText size={16} className="text-[#C5A880] shrink-0" />
+                <span>GST: <span className="text-stone-300 font-mono tracking-wider">{gstNumber}</span></span>
+              </div>
             </div>
 
             <div className="pt-2">
@@ -147,7 +161,9 @@ export const Footer = () => {
         {/* Bottom copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
           <p>© {new Date().getFullYear()} Janki Traders. Digital Catalogue System. All rights reserved.</p>
-          <p className="flex items-center gap-4">
+          <p className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center sm:justify-end">
+            <span>GST: {gstNumber}</span>
+            <span>•</span>
             <span>Controlled Catalogue Access Protocol</span>
             <span>•</span>
             <span>Architectural Doors Division</span>

@@ -12,14 +12,11 @@ import heroSlideMobile2 from '../assets/hero-slide-mobile-2.webp';
 import heroSlideMobile3 from '../assets/hero-slide-mobile-3.webp';
 import {
   ArrowRight,
-  Droplets,
-  Layers,
   Lock,
   MessageCircle,
   Phone,
   MapPin,
   Clock,
-  Compass,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -258,7 +255,9 @@ export const HomePage = () => {
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
   const phone = settings?.contact_number || '+91 98765 43210';
-  const address = settings?.address || 'Plot No. 42, Timber & Architectural Market, Ring Road, Ahmedabad, Gujarat 380001';
+  const address = settings?.address && !settings.address.includes('Plot No. 42')
+    ? settings.address
+    : 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
 
   return (
     <div className="min-h-screen bg-[#FAF9F5]">
@@ -303,13 +302,14 @@ export const HomePage = () => {
 
         {/* Centered Hero Content */}
         <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-16 text-center flex flex-col items-center justify-center">
+
           {/* Headline */}
-          <h1 className="font-serif text-[1.65rem] sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF9F5] font-semibold leading-[1.18] sm:leading-[1.1] tracking-tight max-w-4xl drop-shadow-lg mb-3 sm:mb-6">
-            Architectural Doors of Timeless Craft & Enduring Strength
+          <h1 className="font-serif text-[clamp(1.75rem,5.5vw+0.25rem,4.25rem)] text-[#FAF9F5] font-semibold leading-[1.15] tracking-tight max-w-4xl drop-shadow-lg mb-4 sm:mb-6">
+            Janki Traders<br />All Type of Door Specialist
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[13px] sm:text-lg md:text-xl text-[#E0DDD5] font-light leading-relaxed max-w-2xl drop-shadow-md mb-6 sm:mb-10">
+          <p className="text-[clamp(0.875rem,1.6vw,1.125rem)] text-[#E0DDD5] font-light leading-relaxed max-w-3xl drop-shadow-md mb-6 sm:mb-10">
             Janki Traders supplies premier residential and commercial door collections — from 100% moisture-proof WPC & FRP formulations to handcrafted solid Burma teak and contemporary acoustic glass doors.
           </p>
 
@@ -317,7 +317,7 @@ export const HomePage = () => {
           <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4">
             <Link
               to="/shop"
-              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-xs tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-semibold text-[clamp(0.6875rem,1.5vw,0.75rem)] tracking-wider uppercase transition-all shadow-lg hover:shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <span>Explore Full Catalogue</span>
               <ArrowRight size={14} />
@@ -327,7 +327,7 @@ export const HomePage = () => {
               href={`https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hello Janki Traders, I would like to enquire about your door collections.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-xs tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-md bg-white/10 hover:bg-white/20 text-[#FAF9F5] font-semibold text-[clamp(0.6875rem,1.5vw,0.75rem)] tracking-wider uppercase border border-white/30 hover:border-white transition-all shadow-md backdrop-blur-md flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
             >
               <MessageCircle size={15} className="text-[#25D366]" />
               <span>WhatsApp Enquiry</span>
@@ -395,44 +395,6 @@ export const HomePage = () => {
             </p>
           </div>
 
-          {/* Key pillars */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] space-y-3">
-              <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
-                <Droplets size={20} />
-              </div>
-              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
-                100% Waterproof Formulations
-              </h3>
-              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
-                Engineered FRP and WPC doors that withstand high humidity, direct shower spray, and moisture without rotting or swelling.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] space-y-3">
-              <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
-                <Layers size={20} />
-              </div>
-              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
-                Fluted & Modern Glass Designs
-              </h3>
-              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
-                Toughened fluted, reeded, and frosted glass framed in ultra-slim matte aluminum profiles for refined interior partitions.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-lg bg-[#FAF9F5] border border-[#E8E2D5] space-y-3">
-              <div className="w-10 h-10 rounded-sm bg-[#8C6D46]/10 text-[#8C6D46] flex items-center justify-center">
-                <Compass size={20} />
-              </div>
-              <h3 className="font-serif text-[clamp(1.125rem,2.5vw,1.25rem)] font-semibold text-[#1A1A1A] leading-snug">
-                Bespoke Artisanal Teak
-              </h3>
-              <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] leading-relaxed">
-                Seasoned Burma teak and handcrafted entrance doors with custom brass inlays and multi-point smart locking compatibility.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 

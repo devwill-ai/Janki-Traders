@@ -30,17 +30,22 @@ const settingSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      default: 'info@jankitraders.com',
+      default: 'parthsabhadiya80@gmail.com',
       trim: true,
     },
     address: {
       type: String,
-      default: 'Plot No. 42, Timber & Architectural Market, Ring Road, Ahmedabad, Gujarat 380001',
+      default: 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat',
+      trim: true,
+    },
+    gst_number: {
+      type: String,
+      default: '24QRCPS1308N1ZA',
       trim: true,
     },
     google_maps_url: {
       type: String,
-      default: 'https://maps.google.com/?q=Janki+Traders+Ahmedabad',
+      default: 'https://maps.google.com/?q=Trapaj+Road+Alang+Bhavnagar',
       trim: true,
     },
     business_hours: {

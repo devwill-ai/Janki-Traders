@@ -27,6 +27,7 @@ export const AdminSettings = () => {
     google_maps_url: '',
     business_hours: '',
     about_text: '',
+    gst_number: '',
   });
 
   // Password change state
@@ -60,6 +61,7 @@ export const AdminSettings = () => {
             google_maps_url: res.data.google_maps_url || '',
             business_hours: res.data.business_hours || '',
             about_text: res.data.about_text || '',
+            gst_number: res.data.gst_number || '',
           });
         }
       } catch (err) {
@@ -243,6 +245,17 @@ export const AdminSettings = () => {
                   type="email"
                   value={settings.email}
                   onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold uppercase tracking-wider text-stone-700">GST Number</label>
+                <input
+                  type="text"
+                  value={settings.gst_number}
+                  onChange={(e) => setSettings({ ...settings, gst_number: e.target.value })}
+                  placeholder="e.g. 24QRCPS1308N1ZA"
                   className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
