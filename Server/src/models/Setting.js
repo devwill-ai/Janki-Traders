@@ -35,7 +35,7 @@ const settingSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat',
+      default: 'C4CF+JM6, Talaja, Gujarat 364150',
       trim: true,
     },
     gst_number: {
@@ -45,7 +45,7 @@ const settingSchema = new mongoose.Schema(
     },
     google_maps_url: {
       type: String,
-      default: 'https://maps.google.com/?q=Trapaj+Road+Alang+Bhavnagar',
+      default: 'https://maps.app.goo.gl/aXkPTmy2coVBbrAD9',
       trim: true,
     },
     business_hours: {

@@ -133,7 +133,7 @@ export const AdminDashboard = () => {
       </div>
 
       {/* 7 KPI Cards (Section 10) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
         {kpiCards.map((kpi, idx) => {
           const Icon = kpi.icon;
           const isLastOnMobile = idx === kpiCards.length - 1;
@@ -142,12 +142,13 @@ export const AdminDashboard = () => {
             <Link
               key={idx}
               to={kpi.link}
-              className={`p-3.5 sm:p-5 rounded-xl border border-[#E8E2D5] ${kpi.bg} shadow-xs hover:border-[#8C6D46] transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between ${
+              title={kpi.label}
+              className={`p-3 sm:p-5 rounded-xl border border-[#E8E2D5] ${kpi.bg} shadow-xs hover:border-[#8C6D46] transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between ${
                 isLastOnMobile ? 'col-span-2 sm:col-span-1' : ''
               }`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] sm:text-[11px] font-semibold text-stone-500 uppercase tracking-wider line-clamp-1">
+              <div className="flex items-start justify-between gap-1.5 sm:gap-2">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-stone-500 uppercase tracking-wide sm:tracking-wider leading-snug break-words flex-1 min-w-0 line-clamp-2">
                   {kpi.label}
                 </span>
                 <div className="p-1.5 rounded-lg bg-white/70 border border-[#E8E2D5]/60 shrink-0">

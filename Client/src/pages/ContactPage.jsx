@@ -20,12 +20,12 @@ export const ContactPage = () => {
   const email = settings?.email && settings.email !== 'sales@jankitraders.com' && settings.email !== 'info@jankitraders.com'
     ? settings.email
     : 'parthsabhadiya80@gmail.com';
-  const address = settings?.address && !settings.address.includes('Plot No. 42')
+  const address = settings?.address && !settings.address.includes('Plot No. 42') && !settings.address.includes('Alang')
     ? settings.address
-    : 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
-  const mapsUrl = settings?.google_maps_url && !settings.google_maps_url.includes('Ahmedabad')
+    : 'C4CF+JM6, Talaja, Gujarat 364150';
+  const mapsUrl = settings?.google_maps_url && !settings.google_maps_url.includes('Ahmedabad') && !settings.google_maps_url.includes('Trapaj')
     ? settings.google_maps_url
-    : 'https://maps.google.com/?q=Trapaj+Road+Alang+Bhavnagar';
+    : 'https://maps.app.goo.gl/aXkPTmy2coVBbrAD9';
   const hours = settings?.business_hours || 'Monday - Saturday: 9:30 AM to 8:00 PM (Sunday Closed)';
 
   const [formSent, setFormSent] = useState(false);
@@ -237,7 +237,7 @@ export const ContactPage = () => {
               <div className="aspect-[16/9] w-full rounded-lg overflow-hidden bg-[#F2EFE9] relative flex items-center justify-center">
                 <iframe
                   title="Janki Traders Location Map"
-                  src="https://maps.google.com/maps?q=Timber+Market+Ahmedabad&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent('C4CF+JM6 Janki traders, Talaja, Gujarat 364150')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                   className="w-full h-full border-0"
                   loading="lazy"
                 />

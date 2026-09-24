@@ -255,9 +255,9 @@ export const HomePage = () => {
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
   const phone = settings?.contact_number || '+91 98765 43210';
-  const address = settings?.address && !settings.address.includes('Plot No. 42')
+  const address = settings?.address && !settings.address.includes('Plot No. 42') && !settings.address.includes('Alang')
     ? settings.address
-    : 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
+    : 'C4CF+JM6, Talaja, Gujarat 364150';
 
   return (
     <div className="min-h-screen bg-[#FAF9F5]">
