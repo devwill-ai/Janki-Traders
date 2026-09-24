@@ -35,7 +35,7 @@ const settingSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: 'C4CF+JM6, Talaja, Gujarat 364150',
+      default: 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat',
       trim: true,
     },
     gst_number: {

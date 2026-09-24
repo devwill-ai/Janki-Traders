@@ -14,7 +14,7 @@ import {
 
 export const Navbar = () => {
   const location = useLocation();
-  const { status, daysRemaining, hoursRemaining, openAccessModal } = useCustomer();
+  const { status, daysRemaining, hoursRemaining, openAccessModal, settings } = useCustomer();
   const { distinctCount, openBulkModal } = useBulkEnquiry();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -70,14 +70,14 @@ export const Navbar = () => {
                 isTransparent ? 'text-white drop-shadow-sm' : 'text-[#1A1A1A]'
               }`}
             >
-              Janki Traders
+              {settings?.company_name || 'Janki Traders'}
             </span>
             <span
               className={`text-[clamp(7.5px,0.75vw+1px,10px)] tracking-[clamp(0.12em,0.2vw,0.2em)] uppercase font-sans block mt-1 font-medium transition-colors duration-300 ${
                 isTransparent ? 'text-[#C5A880]' : 'text-[#8C6D46]'
               }`}
             >
-              Architectural Doors
+              {settings?.tagline || 'Architectural Doors'}
             </span>
           </div>
         </Link>

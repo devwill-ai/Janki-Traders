@@ -10,27 +10,6 @@ router.get('/', async (req, res, next) => {
     if (!settings) {
       settings = new Setting();
       await settings.save();
-    } else {
-      let modified = false;
-      if (!settings.address || settings.address.includes('Plot No. 42') || settings.address.includes('Alang')) {
-        settings.address = 'C4CF+JM6, Talaja, Gujarat 364150';
-        modified = true;
-      }
-      if (!settings.google_maps_url || settings.google_maps_url.includes('Ahmedabad') || settings.google_maps_url.includes('Trapaj')) {
-        settings.google_maps_url = 'https://maps.app.goo.gl/aXkPTmy2coVBbrAD9';
-        modified = true;
-      }
-      if (!settings.email || settings.email === 'info@jankitraders.com') {
-        settings.email = 'parthsabhadiya80@gmail.com';
-        modified = true;
-      }
-      if (!settings.gst_number) {
-        settings.gst_number = '24QRCPS1308N1ZA';
-        modified = true;
-      }
-      if (modified) {
-        await settings.save();
-      }
     }
 
     res.json({

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { useAdmin } from '../../context/AdminContext';
+import { useCustomer } from '../../context/CustomerContext';
 import {
   Phone,
   MessageCircle,
@@ -10,10 +11,13 @@ import {
   Key,
   Eye,
   EyeOff,
+  MapPin,
+  Globe,
 } from 'lucide-react';
 
 export const AdminSettings = () => {
   const { adminUser } = useAdmin();
+  const { updateSettingsState, fetchSettings: refreshCustomerSettings } = useCustomer();
 
   // Settings form state
   const [settings, setSettings] = useState({
@@ -81,6 +85,11 @@ export const AdminSettings = () => {
       const res = await api.updateAdminSettings(settings);
       if (res.success) {
         setSettingsFeedback({ type: 'success', message: 'Settings saved successfully!' });
+        if (res.data) {
+          updateSettingsState(res.data);
+        } else if (refreshCustomerSettings) {
+          refreshCustomerSettings();
+        }
       }
     } catch (err) {
       setSettingsFeedback({ type: 'error', message: err.message || 'Failed to update settings.' });
@@ -171,6 +180,19 @@ export const AdminSettings = () => {
                 />
               </div>
 
+              <div className="space-y-1">
+                <label className="font-semibold uppercase tracking-wider text-stone-700">Tagline / Subheading</label>
+                <input
+                  type="text"
+                  value={settings.tagline}
+                  onChange={(e) => setSettings({ ...settings, tagline: e.target.value })}
+                  placeholder="e.g. Premium Architectural & Waterproof Doors"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {/* Default Catalogue Access Duration (Section 16: default 7 days) */}
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">
@@ -185,6 +207,17 @@ export const AdminSettings = () => {
                   className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
                 <span className="text-[10px] text-stone-500">Specified default: 7 days.</span>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold uppercase tracking-wider text-stone-700">GST Number</label>
+                <input
+                  type="text"
+                  value={settings.gst_number}
+                  onChange={(e) => setSettings({ ...settings, gst_number: e.target.value })}
+                  placeholder="e.g. 24QRCPS1308N1ZA"
+                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                />
               </div>
             </div>
 
@@ -228,6 +261,22 @@ export const AdminSettings = () => {
               />
             </div>
 
+            {/* Google Maps / GMB URL */}
+            <div className="space-y-1">
+              <label className="font-semibold uppercase tracking-wider text-stone-700">Google Maps / GMB URL</label>
+              <div className="relative">
+                <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                <input
+                  type="url"
+                  value={settings.google_maps_url}
+                  onChange={(e) => setSettings({ ...settings, google_maps_url: e.target.value })}
+                  placeholder="https://maps.app.goo.gl/..."
+                  className="w-full pl-8 pr-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+                />
+              </div>
+              <span className="text-[10px] text-stone-500">Google My Business / Google Maps share link.</span>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Business Hours</label>
@@ -248,17 +297,18 @@ export const AdminSettings = () => {
                   className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
                 />
               </div>
+            </div>
 
-              <div className="space-y-1">
-                <label className="font-semibold uppercase tracking-wider text-stone-700">GST Number</label>
-                <input
-                  type="text"
-                  value={settings.gst_number}
-                  onChange={(e) => setSettings({ ...settings, gst_number: e.target.value })}
-                  placeholder="e.g. 24QRCPS1308N1ZA"
-                  className="w-full px-3 py-2 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
-                />
-              </div>
+            {/* About / Description text */}
+            <div className="space-y-1">
+              <label className="font-semibold uppercase tracking-wider text-stone-700">About Store Description</label>
+              <textarea
+                rows={3}
+                value={settings.about_text}
+                onChange={(e) => setSettings({ ...settings, about_text: e.target.value })}
+                placeholder="Store description displayed in footer and about sections..."
+                className="w-full p-2.5 bg-[#FAF9F5] border border-[#E8E2D5] rounded-lg text-sm sm:text-xs text-[#1A1A1A] focus:outline-none focus:border-[#8C6D46]"
+              />
             </div>
 
             <div className="pt-2">

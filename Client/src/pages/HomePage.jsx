@@ -255,9 +255,8 @@ export const HomePage = () => {
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
   const phone = settings?.contact_number || '+91 98765 43210';
-  const address = settings?.address && !settings.address.includes('Plot No. 42') && !settings.address.includes('Alang')
-    ? settings.address
-    : 'C4CF+JM6, Talaja, Gujarat 364150';
+  const address = settings?.address || 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
+  const hours = settings?.business_hours || 'Mon - Sat: 9:30 AM to 8:00 PM (Sunday Open by Prior Trade Appointment)';
 
   return (
     <div className="min-h-screen bg-[#FAF9F5]">
@@ -562,8 +561,7 @@ export const HomePage = () => {
                   Business Hours
                 </h4>
                 <p className="text-[clamp(0.75rem,1.8vw,0.8125rem)] text-[#6B6862] mt-1 leading-relaxed">
-                  Mon - Sat: 9:30 AM to 8:00 PM<br />
-                  Sunday Open by Prior Trade Appointment
+                  {hours}
                 </p>
               </div>
             </div>

@@ -8,14 +8,13 @@ export const Footer = () => {
   const phone = settings?.contact_number || '+91 98765 43210';
   const whatsapp = settings?.whatsapp_number || '+91 98765 43210';
   const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
-  const address = settings?.address && !settings.address.includes('Plot No. 42') && !settings.address.includes('Alang')
-    ? settings.address
-    : 'C4CF+JM6, Talaja, Gujarat 364150';
-  const email = settings?.email && settings.email !== 'info@jankitraders.com' && settings.email !== 'sales@jankitraders.com'
-    ? settings.email
-    : 'parthsabhadiya80@gmail.com';
+  const address = settings?.address || 'Plot no. 5205, Trapaj Road, b/h Honda Showroom, Alang, Bhavnagar, Gujarat';
+  const email = settings?.email || 'parthsabhadiya80@gmail.com';
   const gstNumber = settings?.gst_number || '24QRCPS1308N1ZA';
   const hours = settings?.business_hours || 'Mon - Sat: 9:30 AM to 8:00 PM (Sunday Closed)';
+  const companyName = settings?.company_name || 'Janki Traders';
+  const tagline = settings?.tagline || 'Architectural Doors';
+  const aboutText = settings?.about_text || 'Distributor and wholesaler of high-grade architectural doors. Specializing in 100% waterproof WPC & FRP doors, fluted glass double doors, solid Burma teak, and designer pivot entrances.';
 
   return (
     <footer className="bg-[#181818] text-[#E8E2D5] pt-16 pb-24 md:pb-16 border-t border-[#2D2B28]">
@@ -31,15 +30,15 @@ export const Footer = () => {
               />
               <div>
                 <span className="font-serif text-[clamp(1.25rem,3vw,1.5rem)] font-semibold tracking-wide text-white block">
-                  Janki Traders
+                  {companyName}
                 </span>
                 <span className="text-[clamp(0.5625rem,1.2vw,0.625rem)] tracking-[0.2em] uppercase font-sans text-[#C5A880] block font-medium">
-                  Architectural Doors
+                  {tagline}
                 </span>
               </div>
             </div>
             <p className="text-[clamp(0.8125rem,1.8vw,0.875rem)] text-stone-400 font-light leading-relaxed">
-              Distributor and wholesaler of high-grade architectural doors. Specializing in 100% waterproof WPC & FRP doors, fluted glass double doors, solid Burma teak, and designer pivot entrances.
+              {aboutText}
             </p>
             <div className="pt-2 flex items-center gap-3 text-[clamp(0.6875rem,1.5vw,0.75rem)] text-[#C5A880]">
               <ShieldCheck size={16} />
@@ -160,7 +159,7 @@ export const Footer = () => {
 
         {/* Bottom copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-          <p>© {new Date().getFullYear()} Janki Traders. Digital Catalogue System. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {companyName}. Digital Catalogue System. All rights reserved.</p>
           <p className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center sm:justify-end">
             <span>GST: {gstNumber}</span>
             <span>•</span>

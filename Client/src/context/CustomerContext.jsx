@@ -28,6 +28,11 @@ export const CustomerProvider = ({ children }) => {
     }
   }, []);
 
+  const updateSettingsState = useCallback((newSettings) => {
+    if (!newSettings) return;
+    setSettings((prev) => ({ ...(prev || {}), ...newSettings }));
+  }, []);
+
   // Check and restore customer access via httpOnly cookie (sent automatically)
   const checkAccess = useCallback(async () => {
     try {
@@ -60,6 +65,12 @@ export const CustomerProvider = ({ children }) => {
   useEffect(() => {
     fetchSettings();
     checkAccess();
+
+    const handleFocus = () => {
+      fetchSettings();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, [fetchSettings, checkAccess]);
 
   // Request Access handler
@@ -120,6 +131,8 @@ export const CustomerProvider = ({ children }) => {
         isLoading,
         isAccessModalOpen,
         settings,
+        fetchSettings,
+        updateSettingsState,
         openAccessModal,
         closeAccessModal,
         requestAccess,
